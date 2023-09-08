@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('elo-peripherals-refresh-sdk-release.aar'))

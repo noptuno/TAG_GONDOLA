@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <soap:Body>
+ <ObtenerDatosArticuloEtiquetasResponse>
+         <ObtenerDatosArticuloEtiquetasResult>
+            <DescArticulo_1>SHAKIRA DANCE MOONLIGHT Ñ</DescArticulo_1>
+            <DescArticulo_2>X 80 ML ñ</DescArticulo_2>
+            <CodProd>13397</CodProd>
+            <CodBarras>9151200427959</CodBarras>
+            <Precio>1290</Precio>
+            <Stock>9</Stock>
+            <IP>192.168.2.85</IP>
+            <Producto>121623</Producto>
+            <Suc>2</Suc>
+            <Mensaje>OK</Mensaje>
+            <Estado>true</Estado>
+             <Estado>off_available</Estado>
+             <Estado>txt_oferta</Estado>
+         </ObtenerDatosArticuloEtiquetasResult>
+</ObtenerDatosArticuloEtiquetasResponse>
+    </soap:Body>
+</soap:Envelope>
+

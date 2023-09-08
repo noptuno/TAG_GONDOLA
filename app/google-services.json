@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "581089522301",
+    "firebase_url": "https://sanroque-5f2e3.firebaseio.com",
+    "project_id": "sanroque-5f2e3",
+    "storage_bucket": "sanroque-5f2e3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:581089522301:android:ccef5b10ee4f2771e0f714",
+        "android_client_info": {
+          "package_name": "com.desarrollo.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "581089522301-k0rraa0mtfrn821j1bmp9c64pve294ab.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.desarrollo.myapplication",
+            "certificate_hash": "a4b1123abde926606a8fef1aecba81d21bffb070"
+          }
+        },
+        {
+          "client_id": "581089522301-tpreoj77uei7mvqml132disds7p4gn0m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJB8V-ynZXDc1JRwEe9FwyTtVm9EPcfhI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "581089522301-tpreoj77uei7mvqml132disds7p4gn0m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

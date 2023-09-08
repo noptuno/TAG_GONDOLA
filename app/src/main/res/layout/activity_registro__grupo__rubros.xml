@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".Configuracion.Registro_Grupo_Rubros">
+
+    <EditText
+        android:id="@+id/editTextcodigo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="codigo"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@+id/textView17"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textView17"
+        app:layout_constraintTop_toTopOf="@+id/textView17" />
+
+    <EditText
+        android:id="@+id/editTextrubro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Rubro"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="@+id/textView19"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textView19"
+        app:layout_constraintTop_toTopOf="@+id/textView19" />
+
+    <Button
+        android:id="@+id/buttonnuevo"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:background="@drawable/btn_fondo_color"
+        android:text="nuevo"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonregistrar"
+        app:layout_constraintEnd_toStartOf="@+id/buttonregistrar"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/buttonregistrar" />
+
+    <Button
+        android:id="@+id/buttoneliminar"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:background="@drawable/btn_fondo_color"
+        android:text="Eliminar"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonregistrar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/buttonregistrar"
+        app:layout_constraintTop_toTopOf="@+id/buttonregistrar" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerviewrubros"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonregistrar" />
+
+    <Button
+        android:id="@+id/buttonregistrar"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/btn_fondo_color"
+        android:text="REGISTRAR"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toStartOf="@+id/buttoneliminar"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/buttonnuevo"
+        app:layout_constraintTop_toBottomOf="@+id/editTextrubro" />
+
+    <TextView
+        android:id="@+id/textView17"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="Numero:"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/editTextcodigo"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView19"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Grupo Rubro:"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/editTextrubro"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView17" />
+</android.support.constraint.ConstraintLayout>

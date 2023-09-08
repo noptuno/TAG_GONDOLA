@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soap:Body>
+        <ObtenerDatosArticuloEtiquetasResponse>
+            <ObtenerDatosArticuloEtiquetasResult>
+                <Numero>1</Numero>
+                <Descripcion>Farmacia</Descripcion>
+            </ObtenerDatosArticuloEtiquetasResult>
+
+            <ObtenerDatosArticuloEtiquetasResult>
+                <Numero>7</Numero>
+                <Descripcion>Dermocosmetica</Descripcion>
+            </ObtenerDatosArticuloEtiquetasResult>
+
+            <ObtenerDatosArticuloEtiquetasResult>
+                <Numero>2</Numero>
+                <Descripcion>Varios Farmacia</Descripcion>
+            </ObtenerDatosArticuloEtiquetasResult>
+
+            <ObtenerDatosArticuloEtiquetasResult>
+                <Numero>8</Numero>
+                <Descripcion>Varios</Descripcion>
+            </ObtenerDatosArticuloEtiquetasResult>
+
+            <ObtenerDatosArticuloEtiquetasResult>
+                <Numero>3</Numero>
+                <Descripcion>Cosmetica</Descripcion>
+            </ObtenerDatosArticuloEtiquetasResult>
+
+            <ObtenerDatosArticuloEtiquetasResult>
+                <Numero>4</Numero>
+                <Descripcion>Tocador</Descripcion>
+            </ObtenerDatosArticuloEtiquetasResult>
+
+            <ObtenerDatosArticuloEtiquetasResult>
+                <Numero>5</Numero>
+                <Descripcion>Perfumeria</Descripcion>
+            </ObtenerDatosArticuloEtiquetasResult>
+
+            <ObtenerDatosArticuloEtiquetasResult>
+                <Numero>9</Numero>
+                <Descripcion>Electronica</Descripcion>
+            </ObtenerDatosArticuloEtiquetasResult>
+
+            <ObtenerDatosArticuloEtiquetasResult>
+                <Numero>6</Numero>
+                <Descripcion>Kiosco</Descripcion>
+            </ObtenerDatosArticuloEtiquetasResult>
+
+            <ObtenerDatosArticuloEtiquetasResult>
+                <Numero>10</Numero>
+                <Descripcion>Limpieza</Descripcion>
+            </ObtenerDatosArticuloEtiquetasResult>
+
+        </ObtenerDatosArticuloEtiquetasResponse>
+    </soap:Body>
+</soap:Envelope>
