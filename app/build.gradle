@@ -53,4 +53,5 @@ dependencies {
     implementation files('libs/starioextension.jar')
     implementation files('libs/StarIOPort3.1.jar')
     implementation files('libs/ePOS2.jar')
+    implementation files('libs/DO_AndroidSDK_v2.5.0.aar')
 }

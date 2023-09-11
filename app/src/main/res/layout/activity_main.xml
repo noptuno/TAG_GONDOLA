@@ -10,6 +10,21 @@
     tools:showIn="@layout/app_bar_main">
 
     <Button
+        android:id="@+id/btnWifi"
+        android:layout_width="118dp"
+        android:layout_height="117dp"
+        android:layout_marginTop="200dp"
+        android:background="@drawable/btn_fondo_color2"
+        android:fontFamily="@font/allerta"
+        android:text="Tag Gondola Wifi"
+        android:textColor="@android:color/background_light"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/btnTag"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/btnTag"
+        app:layout_constraintTop_toBottomOf="@+id/btnTag" />
+
+    <Button
         android:id="@+id/btndispensador"
         android:layout_width="118dp"
         android:layout_height="118dp"
