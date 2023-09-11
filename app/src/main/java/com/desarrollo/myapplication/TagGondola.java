@@ -80,6 +80,12 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
     private String sucursal;
     private String m_printerMAC = null;
     private String m_ip = null;
+
+    private String m_communicationMethod = null;
+    private String m_printerIP = null;
+    private String m_printerPort = null;
+
+
     private ProductoAdapter adapter;
     private ProductosDB db;
     private Button boton, buttonxml;
@@ -203,6 +209,11 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
             sucursal = (parametros.getString("suc"));
             m_printerMAC = (parametros.getString("mac"));
             m_ip = (parametros.getString("ip"));
+
+            m_communicationMethod = (parametros.getString("tipoconexion"));
+            m_printerIP = (parametros.getString("ipimpre"));
+            m_printerPort = (parametros.getString("port"));
+
 
         } else {
             Toast.makeText(getApplicationContext(), "No hay datos a mostrar", Toast.LENGTH_LONG).show();

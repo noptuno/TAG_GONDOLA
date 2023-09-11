@@ -151,7 +151,9 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
     // Configuration files to load
     String ApplicationConfigFilename = "applicationconfigg.dat";
 
-    DMRPrintSettings g_appSettings = new DMRPrintSettings("", 0, 0, "0", "0", "0",0);
+
+
+    DMRPrintSettings g_appSettings = new DMRPrintSettings("", 0, "0", 0, 0, "","",0,"","","");
     //2018 PH
     private IntentFilter mIntentFilter;//Se usa para el broadcast. Del lado del servicio asigno un setAction al intent que voy a enviar con sendBroadcast.
     // De este lado, al estar registrado el BroadcastReceiver con el IntentFilter, se "filtra" por esa acción del setAction y se produce el onReceive del BroadcastReceiver.
@@ -200,6 +202,10 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
         ipwebservice = g_appSettings.getIpwebservice();//2018 PH
         webservice = g_appSettings.getWebservice();//2018 PH
 
+        m_printerIP = g_appSettings.getPrinterIP();
+        m_printerPort = g_appSettings.getSelectedPrinterPort();
+
+
         //======Mapping UI controls from our activity xml===========//
 
         tip = findViewById(R.id.txt_ipwebservice);
@@ -236,13 +242,27 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
                 connectionType = m_connectionSpinner.getSelectedItem().toString();
                 g_appSettings.setCommunicationType(connectionType);
 
-                if (connectionType.equals("Bluetooth")) {
+                if (connectionType.equals("TCP/IP"))
+                {
+                    if (m_printerIP.length() == 0)
+                    {
+                        m_connectionInfoStatus.setText(R.string.connection_not_configured);
+                    }
+                    else {
+                        String printerInfo = "Printer's IP Address/Port: "+ m_printerIP + ":"+ Integer.toString(m_printerPort);
+                        m_connectionInfoStatus.setText(printerInfo);
+                    }
+
+                }else if (connectionType.equals("Bluetooth")) {
                     if (m_printerMAC.length() == 0) {
                         m_connectionInfoStatus.setText(R.string.connection_not_configured);
                     } else {
                         String printerInfo = "Printer's MAC Address: " + m_printerMAC;
                         m_connectionInfoStatus.setText(printerInfo);
                     }
+                }else if (connectionType.equals("Wifi")){
+
+
                 }
 
                 g_appSettings.setCommunicationMethod(m_connectionSpinner.getSelectedItemPosition());

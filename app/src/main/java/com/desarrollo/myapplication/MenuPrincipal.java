@@ -45,20 +45,25 @@ public class MenuPrincipal extends AppCompatActivity {
     TextView text,txtversion;
     String idlogin;
 
-
+    String m_communicationMethod = "";
 
     private Button btnTag, btnEti,btnScann,btnPicking;
     String ApplicationConfigFilename = "applicationconfigg.dat";
     private String m_printerMode = null;
     private String m_printerMAC = null;
     private String m_ip = null;
+
+    private Button btnwifi;
+
+    private  String m_printerIP = null;
     private String m_sucursal;
     private TextView txtsucursal;
     private String password;
     private SharedPreferences sharedPref;
     private int m_printerPort = 515;
     private static final int REQUEST_PICK_CONFIGURACION = 2;
-    DMRPrintSettings g_appSettings = new DMRPrintSettings("", 0, 0, "0", "0", "0", 0);
+
+    DMRPrintSettings g_appSettings = new DMRPrintSettings("", 0, "0", 0, 0, "","",0,"","","");
 
     private static BarcodeReader barcodeReader;
     private AidcManager manager;
@@ -75,6 +80,36 @@ public class MenuPrincipal extends AppCompatActivity {
 
         txtsucursal = findViewById(R.id.txt_sucursal);
         txtversion = findViewById(R.id.txtversion);
+
+
+
+
+
+        btnwifi = findViewById(R.id.btnWifi);
+        btnwifi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (m_configurado != 0) {
+
+                    Intent intent2 = new Intent(MenuPrincipal.this, TagGondola.class);
+                    intent2.putExtra("mac", m_printerMAC);
+                    intent2.putExtra("suc", m_sucursal);
+                    intent2.putExtra("ip", m_ip);
+                    intent2.putExtra("tipoconexion", m_communicationMethod);
+                    intent2.putExtra("ipimpre", m_printerIP);
+                    intent2.putExtra("port", m_printerPort);
+
+                    startActivity(intent2);
+
+                } else {
+
+                    Toast.makeText(MenuPrincipal.this, "Debe configurar las opciones de la aplicacion", Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+        });
 
         btnEti = findViewById(R.id.btneti);
         btnEti.setOnClickListener(new View.OnClickListener() {
@@ -198,6 +233,14 @@ public class MenuPrincipal extends AppCompatActivity {
             m_sucursal = g_appSettings.getSuc();
             m_ip = g_appSettings.getIpwebservice();
             m_configurado = g_appSettings.getConfigurado();
+
+
+            m_printerIP = g_appSettings.getPrinterIP();
+            m_printerPort = g_appSettings.getSelectedPrinterPort();
+
+            m_communicationMethod = g_appSettings.getCommunicationType();
+
+
             txtsucursal.setText(m_sucursal);
 
         } else {

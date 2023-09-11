@@ -8,6 +8,24 @@ public class DMRPrintSettings implements Serializable {
 
 	private static final long serialVersionUID = 4762643389154364957L;
 
+	private String printerIP;
+	private int selectedPrinterPort;
+
+	public String getPrinterIP() {
+		return printerIP;
+	}
+
+	public void setPrinterIP(String printerIP) {
+		this.printerIP = printerIP;
+	}
+
+	public int getSelectedPrinterPort() {
+		return selectedPrinterPort;
+	}
+
+	public void setSelectedPrinterPort(int selectedPrinterPort) {
+		this.selectedPrinterPort = selectedPrinterPort;
+	}
 
 	private String printerMAC;
 	private int communicationMethod;
@@ -104,23 +122,21 @@ public class DMRPrintSettings implements Serializable {
 	}
 	//set and get folder path
 
-	//Constructor
-	public DMRPrintSettings(String mac, int commMethod, int metodo , String ipwebservic, String webservic , String sucursal, int config){
-
-		printerMAC = mac;
-
-		communicationMethod= commMethod;
-
-		selectedItemIndex = metodo;
-
-		ipwebservice = ipwebservic;
-
-		webservice = webservic;
-
-		suc = sucursal;
-
-		configurado = config;
+	public DMRPrintSettings(String printerIP, int selectedPrinterPort, String printerMAC, int communicationMethod, int selectedItemIndex, String selectedPrintMode, String communicationType, int configurado, String ipwebservice, String webservice, String suc) {
+		this.printerIP = printerIP;
+		this.selectedPrinterPort = selectedPrinterPort;
+		this.printerMAC = printerMAC;
+		this.communicationMethod = communicationMethod;
+		this.selectedItemIndex = selectedItemIndex;
+		this.selectedPrintMode = selectedPrintMode;
+		this.communicationType = communicationType;
+		this.configurado = configurado;
+		this.ipwebservice = ipwebservice;
+		this.webservice = webservice;
+		this.suc = suc;
 	}
+
+	//Constructor
 
 
 }
