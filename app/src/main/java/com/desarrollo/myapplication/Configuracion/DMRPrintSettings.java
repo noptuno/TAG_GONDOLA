@@ -34,6 +34,25 @@ public class DMRPrintSettings implements Serializable {
 	private String communicationType;//2018
 	private int configurado;//2018
 
+	private int printerComandMethodPosition;
+	private String printerComandMethod;
+
+	public int getPrinterComandMethodPosition() {
+		return printerComandMethodPosition;
+	}
+
+	public void setPrinterComandMethodPosition(int printerComandMethodPosition) {
+		this.printerComandMethodPosition = printerComandMethodPosition;
+	}
+
+	public String getPrinterComandMethod() {
+		return printerComandMethod;
+	}
+
+	public void setPrinterComandMethod(String printerComandMethod) {
+		this.printerComandMethod = printerComandMethod;
+	}
+
 	public int getConfigurado() {
 		return configurado;
 	}
@@ -81,11 +100,12 @@ public class DMRPrintSettings implements Serializable {
 	}
 
 
-
 	//2018 PH - Accessors for print mode
 	public String getSelectedPrintMode() {
 		return selectedPrintMode;
 	}
+
+
 
 	public void setSelectedPrintMode(String selectedPrintMode) {
 		this.selectedPrintMode = selectedPrintMode;
@@ -122,7 +142,7 @@ public class DMRPrintSettings implements Serializable {
 	}
 	//set and get folder path
 
-	public DMRPrintSettings(String printerIP, int selectedPrinterPort, String printerMAC, int communicationMethod, int selectedItemIndex, String selectedPrintMode, String communicationType, int configurado, String ipwebservice, String webservice, String suc) {
+	public DMRPrintSettings(String printerIP, int selectedPrinterPort, String printerMAC, int communicationMethod, int selectedItemIndex, String selectedPrintMode, String communicationType, int configurado, int printerComandMethodPosition, String printerComandMethod, String ipwebservice, String webservice, String suc) {
 		this.printerIP = printerIP;
 		this.selectedPrinterPort = selectedPrinterPort;
 		this.printerMAC = printerMAC;
@@ -131,12 +151,15 @@ public class DMRPrintSettings implements Serializable {
 		this.selectedPrintMode = selectedPrintMode;
 		this.communicationType = communicationType;
 		this.configurado = configurado;
+		this.printerComandMethodPosition = printerComandMethodPosition;
+		this.printerComandMethod = printerComandMethod;
 		this.ipwebservice = ipwebservice;
 		this.webservice = webservice;
 		this.suc = suc;
 	}
 
-	//Constructor
+
+//Constructor
 
 
 }

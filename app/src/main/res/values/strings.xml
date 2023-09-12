@@ -47,6 +47,11 @@
         <item>TCP/IP</item>
     </string-array>
 
+    <string-array name="type_impre">
+        <item>TSC</item>
+        <item>HONEYWELL</item>
+    </string-array>
+
     <string-array name="printer_mode_array">
         <item>Esc/Pos</item>
         <item>StarPRNT</item>

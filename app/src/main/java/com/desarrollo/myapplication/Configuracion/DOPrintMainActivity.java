@@ -25,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -93,6 +94,7 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
     private String webservice;
     private String numerodesucursal;
 
+    private LinearLayout layoutprinter;
     private String m_selectedPath;
     private String m_printerIP = null;
     private String m_printerMAC = null;
@@ -125,6 +127,9 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
     private EditText tip;
     private EditText twe;
 
+    private String m_printerComandMethod= null;
+
+
     String m_devicename;
     String m_productoid;
 
@@ -137,6 +142,7 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
 
     //Spinners
     Spinner m_connectionSpinner;
+    Spinner m_PrinterModerSpinner;
     EditText txtsucursal;
     Spinner m_printItemsSpinner;
     Spinner m_printHeadSpinner;
@@ -153,7 +159,7 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
 
 
 
-    DMRPrintSettings g_appSettings = new DMRPrintSettings("", 0, "0", 0, 0, "","",0,"","","");
+    DMRPrintSettings g_appSettings = new DMRPrintSettings("", 0, "0", 0, 0, "","",0,0,"","","","");
     //2018 PH
     private IntentFilter mIntentFilter;//Se usa para el broadcast. Del lado del servicio asigno un setAction al intent que voy a enviar con sendBroadcast.
     // De este lado, al estar registrado el BroadcastReceiver con el IntentFilter, se "filtra" por esa acción del setAction y se produce el onReceive del BroadcastReceiver.
@@ -205,17 +211,31 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
         m_printerIP = g_appSettings.getPrinterIP();
         m_printerPort = g_appSettings.getSelectedPrinterPort();
 
+        layoutprinter = findViewById(R.id.linear_prn);
+
 
         //======Mapping UI controls from our activity xml===========//
 
         tip = findViewById(R.id.txt_ipwebservice);
         twe = findViewById(R.id.txtwebservice);
         m_connectionInfoStatus = (TextView) findViewById(R.id.communication_status_information);
+
         m_connectionSpinner = (Spinner) findViewById(R.id.connection_spinner);
+        m_PrinterModerSpinner  = (Spinner) findViewById(R.id.spi_selectprintmode);
+
+
         m_configConnectionButton = (Button) findViewById(R.id.configConn_button);
         m_printButton = (Button) findViewById(R.id.print_button);
         m_saveButton = (Button) findViewById(R.id.saveSettings_button);
+
         m_connectionSpinner.setSelection(g_appSettings.getCommunicationMethod());
+        m_PrinterModerSpinner.setSelection(g_appSettings.getPrinterComandMethodPosition());
+
+
+        //m_SelectedPrintModerSpiner.setSelection(g_appSettings.getSelectedPrintMode());
+
+
+
         btncambiarpassword = findViewById(R.id.btncambiarcontra);
         txtsucursal = findViewById(R.id.sucursal);
         txtsucursal.setText(numerodesucursal);
@@ -231,6 +251,31 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
 
                 Intent intent = new Intent(DOPrintMainActivity.this, Registro_Grupo_Rubros.class);
                   startActivity(intent);
+
+            }
+        });
+
+
+        //setSelectedPrintMode
+
+
+        m_PrinterModerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                m_printerComandMethod = m_PrinterModerSpinner.getSelectedItem().toString();
+
+
+                g_appSettings.setPrinterComandMethod(m_printerComandMethod);
+
+
+                g_appSettings.setPrinterComandMethodPosition(m_PrinterModerSpinner.getSelectedItemPosition());
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
         });
@@ -253,16 +298,18 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
                         m_connectionInfoStatus.setText(printerInfo);
                     }
 
+                    layoutprinter.setVisibility(View.VISIBLE);
+
                 }else if (connectionType.equals("Bluetooth")) {
+
+                    layoutprinter.setVisibility(View.GONE);
+
                     if (m_printerMAC.length() == 0) {
                         m_connectionInfoStatus.setText(R.string.connection_not_configured);
                     } else {
                         String printerInfo = "Printer's MAC Address: " + m_printerMAC;
                         m_connectionInfoStatus.setText(printerInfo);
                     }
-                }else if (connectionType.equals("Wifi")){
-
-
                 }
 
                 g_appSettings.setCommunicationMethod(m_connectionSpinner.getSelectedItemPosition());
@@ -368,6 +415,8 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
                     g_appSettings.setWebservice(webservice);
                     g_appSettings.setSuc(numerodesucursal);
                     g_appSettings.setConfigurado(1);
+
+
 
                     SaveApplicationSettingToFile();
                 }else{
@@ -493,6 +542,8 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
 
                         }
 
+                        g_appSettings.setPrinterIP(m_printerIP);
+                        g_appSettings.setSelectedPrinterPort(m_printerPort);
                         g_appSettings.setPrinterMAC(m_printerMAC);
 
 
@@ -677,7 +728,7 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
 
         // registerReceiver(impresion, mIntentFilter);
 
-        m_connectionSpinner.setSelection(g_appSettings.getCommunicationMethod());//cargo el spinner de la conexión según la configuración
+        //m_connectionSpinner.setSelection(g_appSettings.getCommunicationMethod());//cargo el spinner de la conexión según la configuración
         //sucursal.setSelection(g_appSettings.getSelectedItemIndex());
         //m_printerModeSpinner.setSelection(g_appSettings.getSelectedModeIndex());//cargo el spinner del modo de impresión según la configuración
         //m_printHeadSpinner.setSelection(g_appSettings.getPrintheadWidthIndex());//cargo el spinner del ancho del papel según la configuración

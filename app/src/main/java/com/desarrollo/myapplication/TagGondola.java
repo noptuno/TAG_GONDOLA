@@ -83,7 +83,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
     private String m_communicationMethod = null;
     private String m_printerIP = null;
-    private String m_printerPort = null;
+    private int m_printerPort =0;
 
 
     private ProductoAdapter adapter;
@@ -210,10 +210,12 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
             m_printerMAC = (parametros.getString("mac"));
             m_ip = (parametros.getString("ip"));
 
+
             m_communicationMethod = (parametros.getString("tipoconexion"));
             m_printerIP = (parametros.getString("ipimpre"));
-            m_printerPort = (parametros.getString("port"));
+            m_printerPort = (parametros.getInt("portimpre"));
 
+            Log.e("Datos Recibidos"," " + m_communicationMethod + " " + m_printerIP + " "+ m_printerPort);
 
         } else {
             Toast.makeText(getApplicationContext(), "No hay datos a mostrar", Toast.LENGTH_LONG).show();
@@ -673,27 +675,13 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                             @Override
                             public void run() {
                                 try {
+
                                     EnableDialog(true, "Enviando Documento...",true);
-                                    TscDll.openport(m_printerMAC);
-                                    TscDll.setup(76, 35, 2, 1, 1, 4, 0);
-                                    TscDll.clearbuffer();
-                                    TscDll.sendcommand("CODEPAGE UTF-8\n");
-                                    TscDll.sendcommand("SET TEAR ON\n");
-                                    TscDll.sendcommand("DIRECTION 0\n");
-                                    TscDll.sendcommand("TEXT 70,20,\"arial_na.TTF\",0,11,11,\"" + "descripcion1" + "\"\n");
-                                    TscDll.sendcommand("TEXT 70,55,\"arial_na.TTF\",0,08,08,\"" + "descripcion2" + "\"\n");
-                                    TscDll.sendcommand("TEXT 80,90,\"arial_na.TTF\",0,08,08,\"" + "Precio Anterior" + "\"\n");
-                                    TscDll.sendcommand("TEXT 70,120,\"strike_t.TTF\",0,13,13,\"" + "$ 1.250" + "\"\n");
-                                    TscDll.sendcommand("TEXT 280,80,\"arial_na.TTF\",0,08,08,\"" + "Precio" + "\"\n");
-                                    TscDll.sendcommand("TEXT 280,115,\"arial_bl.TTF\",0,20,20,\"" + "$ 1.600" + "\"\n");
 
-                                    TscDll.sendcommand("TEXT 400,190,\"arial_na.TTF\",0,11,11,\"" + "123456" + "\"\n");
+                                    ImprimirBluetothTsc();
 
 
-                                    TscDll.barcode(70, 180, "128", 30, 1, 0, 1, 1, "123456");
-                                    TscDll.printlabel(1, 1);
 
-                                    TscDll.closeport(500);
                                     EnableDialog(false, "Enviando terminando...",false);
                                     DisplayPrintingStatusMessage("Impresión Exitosa.");
 
@@ -793,6 +781,28 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
         return super.onOptionsItemSelected(item);
     }
 
+    private void ImprimirBluetothTsc() {
+
+
+        TscDll.openport(m_printerMAC);
+        TscDll.setup(76, 35, 2, 1, 1, 4, 0);
+        TscDll.clearbuffer();
+        TscDll.sendcommand("CODEPAGE UTF-8\n");
+        TscDll.sendcommand("SET TEAR ON\n");
+        TscDll.sendcommand("DIRECTION 0\n");
+        TscDll.sendcommand("TEXT 70,20,\"arial_na.TTF\",0,11,11,\"" + "descripcion1" + "\"\n");
+        TscDll.sendcommand("TEXT 70,55,\"arial_na.TTF\",0,08,08,\"" + "descripcion2" + "\"\n");
+        TscDll.sendcommand("TEXT 80,90,\"arial_na.TTF\",0,08,08,\"" + "Precio Anterior" + "\"\n");
+        TscDll.sendcommand("TEXT 70,120,\"strike_t.TTF\",0,13,13,\"" + "$ 1.250" + "\"\n");
+        TscDll.sendcommand("TEXT 280,80,\"arial_na.TTF\",0,08,08,\"" + "Precio" + "\"\n");
+        TscDll.sendcommand("TEXT 280,115,\"arial_bl.TTF\",0,20,20,\"" + "$ 1.600" + "\"\n");
+        TscDll.sendcommand("TEXT 400,190,\"arial_na.TTF\",0,11,11,\"" + "123456" + "\"\n");
+        TscDll.barcode(70, 180, "128", 30, 1, 0, 1, 1, "123456");
+        TscDll.printlabel(1, 1);
+        TscDll.closeport(500);
+
+    }
+
 
     @Override
     public void run() {
@@ -801,10 +811,14 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
             EnableDialog(true, "Imprimiendo...",true);
             String estado = "00";
+
             TscDll.openport(m_printerMAC);
             TscDll.setup(76, 35, 2, 1, 1, 4, 0);
 
             if (!tagimprimirall) {
+
+                //todo IMPRIMIR 1
+
 
                 Asignar("Imprimiendo: ", lista_producto_seleccionada.getDescArticulo_1());
                 TscDll.clearbuffer();
@@ -813,9 +827,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                 TscDll.sendcommand("DIRECTION 0\n");
                 TscDll.sendcommand("TEXT 70,20,\"arial_na.TTF\",0,11,11,\"" + lista_producto_seleccionada.getDescArticulo_1() + "\"\n");
                 TscDll.sendcommand("TEXT 70,55,\"arial_na.TTF\",0,08,08,\"" + lista_producto_seleccionada.getDescArticulo_2() + "\"\n");
-
                 TscDll.sendcommand("TEXT 280,80,\"arial_na.TTF\",0,08,08,\"" + "Precio" + "\"\n");
-
                 if(lista_producto_seleccionada.getOff_available().equals("N")){
                     TscDll.sendcommand("TEXT 280,115,\"arial_bl.TTF\",0,20,20,\"" + "$ " + lista_producto_seleccionada.getPrecio_lista() + "\"\n");
                 }else{
@@ -823,18 +835,17 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                     TscDll.sendcommand("TEXT 70,120,\"strike_t.TTF\",0,13,13,\"" + "$ " + lista_producto_seleccionada.getPrecio_lista() + "\"\n");
                     TscDll.sendcommand("TEXT 280,115,\"arial_bl.TTF\",0,20,20,\"" + "$ " + lista_producto_seleccionada.getPrecio() + "\"\n");
                 }
-
                 TscDll.sendcommand("TEXT 400,190,\"arial_na.TTF\",0,11,11,\"" + lista_producto_seleccionada.getCodProd() + "\"\n");
                 TscDll.barcode(70, 180, "128", 30, 1, 0, 1, 1, lista_producto_seleccionada.getCodBarras());
                 TscDll.printlabel(1, 1);
-
-
 
                 lista_producto_seleccionada.setIP("SI");
                 db.updatecodigoproduto(lista_producto_seleccionada);
 
 
             } else {
+
+                //TODO IMPRIMIR VARIOS
 
                 db = new ProductosDB(TagGondola.this);
                 for (Producto prod : list) {
@@ -843,14 +854,12 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                         break;
                     }
 
-
                     if (!prod.getIP().equals("SI")){
 
                         if (imprimirofertas){
-                            //todo SI ES OFERTA
+                            //todo SI ELEGI OFERTA
 
                             if (prod.getOff_available().equals("S")) {
-
                                 Asignar("Imprimiendo: ", prod.getDescArticulo_1());
 
                                 TscDll.clearbuffer();
@@ -860,23 +869,20 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                                 TscDll.sendcommand("TEXT 70,20,\"arial_na.TTF\",0,11,11,\"" + prod.getDescArticulo_1() + "\"\n");
                                 TscDll.sendcommand("TEXT 70,55,\"arial_na.TTF\",0,08,08,\"" + prod.getDescArticulo_2() + "\"\n");
 
-
                                 TscDll.sendcommand("TEXT 80,90,\"arial_na.TTF\",0,08,08,\"" + "Precio Anterior" + "\"\n");
                                 TscDll.sendcommand("TEXT 70,120,\"strike_t.TTF\",0,13,13,\"" + "$ " + prod.getPrecio_lista() + "\"\n");
                                 TscDll.sendcommand("TEXT 280,80,\"arial_na.TTF\",0,08,08,\"" + "Precio" + "\"\n");
                                 TscDll.sendcommand("TEXT 280,115,\"arial_bl.TTF\",0,20,20,\"" + "$ " + prod.getPrecio() + "\"\n");
-
 
                                 TscDll.sendcommand("TEXT 400,190,\"arial_na.TTF\",0,11,11,\"" + prod.getCodProd() + "\"\n");
                                 TscDll.barcode(70, 180, "128", 30, 1, 0, 1, 1, prod.getCodBarras());
                                 estado = TscDll.printerstatus();
                                 TscDll.printlabel(1, 1);
 
-
-
-
                                 prod.setIP("SI");
                                 db.updatecodigoproduto(prod);
+
+
                                 try {
                                     Thread.sleep(500);
                                 } catch (InterruptedException e) {
@@ -887,12 +893,10 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                             }
 
                         }else{
-                            //todo SI NO ES OFERTA
+                            //todo SI ELEGI NO OFERTA
 
                             if (prod.getOff_available().equals("N")) {
-
                                 Asignar("Imprimiendo: ", prod.getDescArticulo_1());
-
                                 TscDll.clearbuffer();
                                 TscDll.sendcommand("CODEPAGE UTF-8\n");
                                 TscDll.sendcommand("SET TEAR ON\n");
@@ -905,7 +909,6 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                                 TscDll.barcode(70, 180, "128", 30, 1, 0, 1, 1, prod.getCodBarras());
                                 estado = TscDll.printerstatus();
                                 TscDll.printlabel(1, 1);
-
                                 prod.setIP("SI");
                                 db.updatecodigoproduto(prod);
 
@@ -916,9 +919,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                                     e.printStackTrace();
                                 }
 
-
                             }
-
                         }
                     }
 
@@ -929,7 +930,6 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                                 "Cambiar Rollo antes de: " + timepo);
                         estado = TscDll.printerstatus();
                         timepo--;
-
                         if (cancelarrun || timepo == 0) {
                             cancelarrun = true;
                             break;
@@ -945,7 +945,6 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
             cancelarrun = false;
             tagimprimirall = false;
 
-
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -953,9 +952,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
             DisplayPrintingStatusMessage("Fallo conexion Bluetooth.");
             tagimprimirall = false;
             cancelarrun = false;
-
         }
-
     }
 
 }
