@@ -41,6 +41,7 @@ public class ListOfertaWifi extends AppCompatActivity implements Runnable {
     private int m_printerPort = 0;
     private String m_printerComandMethod;
 
+    byte[] msgBuffer;
     private ProductoAdapter adapter;
     private ProductosDB db;
     private Button boton, buttonxml;
@@ -62,7 +63,6 @@ public class ListOfertaWifi extends AppCompatActivity implements Runnable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_oferta_wifi);
 
-
         cargardatospreference();
 
         btnprinttest = findViewById(R.id.btn_print_wifi);
@@ -71,9 +71,31 @@ public class ListOfertaWifi extends AppCompatActivity implements Runnable {
             @Override
             public void onClick(View view) {
 
-
                 Log.e("IMPRIMIR"," " + m_communicationMethod + " " + m_printerIP + " "+ m_printerPort + " "+ m_printerComandMethod);
-              //  new Thread(ListOfertaWifi.this, "PrintingTask").start();
+
+               String m_data = "SIZE 99.10 mm, 71.1 mm\n"+
+                "BLINE 3 mm, 0 mm\n"+
+                "DIRECTION 0,0\n"+
+                "REFERENCE 0,0\n"+
+                "OFFSET 0 mm\n"+
+                "SET PEEL OFF\n"+
+                "SET CUTTER OFF\n"+
+                "SET PARTIAL_CUTTER OFF\n"+
+                "SET TEAR ON\n"+
+                 "CLS\n"+
+                "BOX 5,394,794,520,3\n"+
+                "CODEPAGE 1252\n"+
+                "TEXT 777,498,\"arial_bl.TTF\",180,13,12,\"Texto de muestra\"\n"+
+                "TEXT 777,443,\"arial_na.TTF\",180,13,12,\"Texto de muestra\"\n"+
+                "TEXT 488,332,\"striketh.TTF\",180,10,8,\"Texto de muestra\"\n"+
+                "TEXT 488,141,\"arial_bl.TTF\",180,11,27,\"Texto de muestra\"\n"+
+                "BOX 77,270,542,367,3\n"+
+                "BOX 70,18,536,197,3\n"+
+                "PRINT 1,1\n";
+
+                msgBuffer = m_data.getBytes();
+
+               new Thread(ListOfertaWifi.this, "PrintingTask").start();
 
             }
         });
@@ -106,15 +128,16 @@ public class ListOfertaWifi extends AppCompatActivity implements Runnable {
 
         try
         {
+
             conn = null;
-            conn = Connection_TCP.createClient(ip,port , false);
+            conn = Connection_TCP.createClient(m_printerIP,m_printerPort , false);
             if(!conn.getIsOpen()) {
                 conn.open();
             }
 
             int bytesWritten = 0;
             int bytesToWrite = 1024;
-            int totalBytes = printdatascpos.length;
+            int totalBytes = msgBuffer.length;
             int remainingBytes = totalBytes;
             while (bytesWritten < totalBytes)
             {
@@ -122,7 +145,7 @@ public class ListOfertaWifi extends AppCompatActivity implements Runnable {
                     bytesToWrite = remainingBytes;
 
                 //Send data, 1024 bytes at a time until all data sent
-                conn.write(printdatascpos, bytesWritten, bytesToWrite);
+                conn.write(msgBuffer, bytesWritten, bytesToWrite);
                 bytesWritten += bytesToWrite;
                 remainingBytes = remainingBytes - bytesToWrite;
                 Thread.sleep(100);

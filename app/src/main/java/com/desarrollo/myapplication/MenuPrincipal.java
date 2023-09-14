@@ -97,7 +97,7 @@ public class MenuPrincipal extends AppCompatActivity {
 
                     }else{
 
-                        Intent intent2 = new Intent(MenuPrincipal.this, ListOfertaWifi.class);
+                        Intent intent2 = new Intent(MenuPrincipal.this, TagGondola.class);
                         intent2.putExtra("mac", m_printerMAC);
                         intent2.putExtra("suc", m_sucursal);
                         intent2.putExtra("ip", m_ip);
