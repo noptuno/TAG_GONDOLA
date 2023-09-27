@@ -809,7 +809,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                     "TEXT 777,498,\"arial_bl.TTF\",180,13,12,\"Nombre Producto\"\n"+
                     "TEXT 777,443,\"arial_na.TTF\",180,13,12,\"Segundo Nombre producto\"\n"+
                     "TEXT 488,332,\"striketh.TTF\",180,10,8,\"$ 1200\"\n"+
-                    "TEXT 488,141,\"arial_bl.TTF\",180,11,27,\"$980\"\n"+
+                    "TEXT 488,141,\"arial_bl.TTF\",180,11,27,\"$ 980\"\n"+
                     "PRINT 1,1\n";
 
             msgBuffer = m_data.getBytes();
@@ -825,7 +825,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                     "^XA\n" +
                     "^CI28\n" +
                     "^FWI\n" +
-                    "^CF0,30\n" +
+                    "^CF0,30\n"+
                     "^LH0,0\n" +
                     "^PON\n" +
                     "^MD0\n" +
@@ -833,10 +833,10 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                     "^XZ\n" +
                     "^XA\n" +
                     "^LRN\n" +
-                    "^A0N,51,52^FO47,24^FDvar1^FS\n" +
-                    "^A0N,34,34^FO53,82^FDva2^FS\n" +
-                    "^A0N,56,56^FO405,180^FDprecio1^FS\n" +
-                    "^A0N,101,102^FO366,373^FDprecio2^FS\n" +
+                    "^A0N,51,52^FO47,24^FDProducto 1^FS\n" +
+                    "^A0N,34,34^FO53,82^FDProducto 2^FS\n" +
+                    "^A0N,56,56^FO405,180^FD$ 20000^FS\n" +
+                    "^A0N,101,102^FO366,373^FD$ 10000^FS\n" +
                     "^XZ";
 
             msgBuffer = m_data.getBytes();
@@ -1072,16 +1072,18 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
         if(producto.getOff_available().equals("N")){
 
             m_data = m_data +
-                    "TEXT 488,141,\"arial_bl.TTF\",180,11,27,\""+"$" +producto.getPrecio_lista()+"\"\n"+
+                    "TEXT 488,141,\"arial_bl.TTF\",180,11,27,\""+"$ " +producto.getPrecio_lista()+"\"\n"+
                     "PRINT 1,1\n";
 
         }else{
 
             m_data = m_data +
-                    "TEXT 488,332,\"striketh.TTF\",180,10,8,\""+"$" + producto.getPrecio_lista()+"\"\n"+
-                    "TEXT 488,141,\"arial_bl.TTF\",180,11,27,\""+"$" + producto.getPrecio() + "\"\n"+
+                    "TEXT 488,332,\"striketh.TTF\",180,10,8,\""+"$ " + producto.getPrecio_lista()+"\"\n"+
+                    "TEXT 488,141,\"arial_bl.TTF\",180,11,27,\""+"$ " + producto.getPrecio() + "\"\n"+
                     "PRINT 1,1\n";
         }
+
+
 
         return m_data;
     }
@@ -1108,20 +1110,22 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                 "^A0N,34,34^FO53,82^FD"+producto.getDescArticulo_2() +"^FS\n" ;
 
 
+
         if(producto.getOff_available().equals("N")){
 
             m_data = m_data +
 
-                    "^A0N,101,102^FO366,373^FD"+producto.getPrecio_lista()+"^FS\n" +
+                    "^A0N,101,102^FO366,373^FD$ "+producto.getPrecio_lista()+"^FS\n" +
                     "^XZ";
 
         }else{
 
             m_data = m_data +
 
-                    "^A0N,56,56^FO405,180^FD"+ producto.getPrecio_lista()+"^FS\n" +
-                    "^A0N,101,102^FO366,373^FD"+producto.getPrecio()+"^FS\n" +
+                    "^A0N,56,56^FO405,180^FD$ "+ producto.getPrecio_lista()+"^FS\n" +
+                    "^A0N,101,102^FO366,373^FD$ "+producto.getPrecio()+"^FS\n" +
                     "^XZ";
+
         }
 
         return m_data;
