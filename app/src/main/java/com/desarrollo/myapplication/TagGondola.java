@@ -815,7 +815,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
             msgBuffer = m_data.getBytes();
 
             ImprimirWifi();
-        }else{
+        }else if (m_printerComandMethod.equals("HONEYWELL")){
 
             m_data ="^XA\n" +
                     "^PW799\n" +
@@ -838,6 +838,46 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                     "^A0N,56,56^FO405,180^FD$ 20000^FS\n" +
                     "^A0N,101,102^FO366,373^FD$ 10000^FS\n" +
                     "^XZ";
+
+            msgBuffer = m_data.getBytes();
+
+            ImprimirWifi();
+
+        }else{
+
+            m_data ="<xpml><page quantity='0' pitch='70.1 mm'></xpml>'Seagull:2.1:DP\n" +
+                    "INPUT OFF\n" +
+                    "VERBOFF\n" +
+                    "INPUT ON\n" +
+                    "SYSVAR(48) = 0\n" +
+                    "SYSVAR(35)=0\n" +
+                    "OPEN \"tmp:setup.sys\" FOR OUTPUT AS #1\n" +
+                    "PRINT#1,\"Printing,Media,Print Area,Media Margin (X),0\"\n" +
+                    "PRINT#1,\"Printing,Media,Clip Default,On\"\n" +
+                    "CLOSE #1\n" +
+                    "SETUP \"tmp:setup.sys\"\n" +
+                    "KILL \"tmp:setup.sys\"\n" +
+                    "CLIP ON\n" +
+                    "CLIP BARCODE ON\n" +
+                    "LBLCOND 3,2\n" +
+                    "<xpml></page></xpml><xpml><page quantity='1' pitch='70.1 mm'></xpml>CLL\n" +
+                    "OPTIMIZE \"BATCH\" ON\n" +
+                    "PP41,550:AN7\n" +
+                    "NASC 8\n" +
+                    "FT \"Univers Condensed Bold\"\n" +
+                    "FONTSIZE 14\n" +
+                    "FONTSLANT 0\n" +
+                    "PT \"Descripcion 1\"\n" +
+                    "PP43,498:FONTSIZE 12\n" +
+                    "PT \"Descripcion 2\"\n" +
+                    "PP374,400:FONTSIZE 24\n" +
+                    "PT \"$ 5000\"\n" +
+                    "PP370,215:FONTSIZE 36\n" +
+                    "PT \"$ 4000\"\n" +
+                    "LAYOUT RUN \"\"\n" +
+                    "PF\n" +
+                    "PRINT KEY OFF\n" +
+                    "<xpml></page></xpml><xpml><end/></xpml>";
 
             msgBuffer = m_data.getBytes();
 
@@ -955,8 +995,10 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
                         if (m_printerComandMethod.equals("TSC")){
                             msgBuffer = prepararTSPL(lista_producto_seleccionada).getBytes();
-                        }else{
+                        }else if(m_printerComandMethod.equals("HONEYWELL")){
                             msgBuffer = prepararDPL(lista_producto_seleccionada).getBytes();
+                        }else{
+                            msgBuffer = prepararDP(lista_producto_seleccionada).getBytes();
                         }
 
                         senddatoswifiTCP(conn,msgBuffer);
@@ -987,8 +1029,10 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
                                         if (m_printerComandMethod.equals("TSC")){
                                             msgBuffer = prepararTSPL(prod).getBytes();
-                                        }else{
+                                        }else if(m_printerComandMethod.equals("HONEYWELL")){
                                             msgBuffer = prepararDPL(prod).getBytes();
+                                        }else{
+                                            msgBuffer = prepararDP(prod).getBytes();
                                         }
 
                                         senddatoswifiTCP(conn,msgBuffer);
@@ -1014,8 +1058,10 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
                                         if (m_printerComandMethod.equals("TSC")){
                                             msgBuffer = prepararTSPL(prod).getBytes();
-                                        }else{
+                                        }else if(m_printerComandMethod.equals("HONEYWELL")){
                                             msgBuffer = prepararDPL(prod).getBytes();
+                                        }else{
+                                            msgBuffer = prepararDP(prod).getBytes();
                                         }
 
                                         senddatoswifiTCP(conn,msgBuffer);
@@ -1088,6 +1134,63 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
         return m_data;
     }
 
+    private String prepararDP(Producto producto){
+
+        String m_data ="<xpml><page quantity='0' pitch='70.1 mm'></xpml>'Seagull:2.1:DP\n" +
+                "INPUT OFF\n" +
+                "VERBOFF\n" +
+                "INPUT ON\n" +
+                "SYSVAR(48) = 0\n" +
+                "SYSVAR(35)=0\n" +
+                "OPEN \"tmp:setup.sys\" FOR OUTPUT AS #1\n" +
+                "PRINT#1,\"Printing,Media,Print Area,Media Margin (X),0\"\n" +
+                "PRINT#1,\"Printing,Media,Clip Default,On\"\n" +
+                "CLOSE #1\n" +
+                "SETUP \"tmp:setup.sys\"\n" +
+                "KILL \"tmp:setup.sys\"\n" +
+                "CLIP ON\n" +
+                "CLIP BARCODE ON\n" +
+                "LBLCOND 3,2\n" +
+                "<xpml></page></xpml><xpml><page quantity='1' pitch='70.1 mm'></xpml>CLL\n" +
+                "OPTIMIZE \"BATCH\" ON\n" +
+                "PP41,550:AN7\n" +
+                "NASC 8\n" +
+                "FT \"Univers Condensed Bold\"\n" +
+                "FONTSIZE 14\n" +
+                "FONTSLANT 0\n" +
+                "PT \""+producto.getDescArticulo_1()+"\"\n" +
+                "PP43,498:FONTSIZE 12\n" +
+                "PT \""+producto.getDescArticulo_2()+"\"\n";
+
+
+        if(producto.getOff_available().equals("N")){
+
+            m_data = m_data +
+                    "PP374,400:FONTSIZE 24\n" +
+                    "PT \""+producto.getPrecio_lista()+"^FS\n" +
+                    "LAYOUT RUN \"\"\n" +
+                    "PF\n" +
+                    "PRINT KEY OFF\n" +
+                    "<xpml></page></xpml><xpml><end/></xpml>";
+
+        }else{
+            m_data = m_data +
+
+                    "PP374,400:FONTSIZE 24\n" +
+                    "PT \""+producto.getPrecio_lista()+"^FS\n" +
+                    "PP370,215:FONTSIZE 36\n" +
+                    "PT \""+producto.getPrecio()+"\"\n" +
+                    "LAYOUT RUN \"\"\n" +
+                    "PF\n" +
+                    "PRINT KEY OFF\n" +
+                    "<xpml></page></xpml><xpml><end/></xpml>";
+        }
+
+
+
+        return m_data;
+    }
+
     private String prepararDPL(Producto producto) {
 
         String m_data ="^XA\n" +
@@ -1119,13 +1222,10 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                     "^XZ";
 
         }else{
-
             m_data = m_data +
-
                     "^A0N,56,56^FO405,180^FD$ "+ producto.getPrecio_lista()+"^FS\n" +
                     "^A0N,101,102^FO366,373^FD$ "+producto.getPrecio()+"^FS\n" +
                     "^XZ";
-
         }
 
         return m_data;
