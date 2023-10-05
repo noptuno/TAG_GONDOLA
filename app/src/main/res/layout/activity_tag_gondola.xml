@@ -53,6 +53,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/txt_porcentaje"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="50%"
+        android:textColor="#882A0C"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/reciclerview"
         android:layout_width="0dp"

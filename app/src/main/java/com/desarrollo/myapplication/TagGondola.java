@@ -101,11 +101,17 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
     private ArrayList<Producto> list;
     private Producto lista_producto_seleccionada;
     private ProgressDialog dialog;
+    private int descuento = 0;
+    private TextView porcentaje;
+
     private boolean imprimirofertas;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tag_gondola);
+
+
+        porcentaje= findViewById(R.id.txt_porcentaje);
 
         cargarbarcoder();
 
@@ -221,6 +227,11 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
             Log.e("Datos"," " + m_communicationMethod + " " + m_printerIP + " "+ m_printerPort + " "+ m_printerComandMethod);
 
+            if (m_communicationMethod.equals("TCP/IP")){
+                descuento = getIntent().getIntExtra("descuento", 0);
+                porcentaje.setText(descuento + "%");
+                porcentaje.setVisibility(View.VISIBLE);
+            }
 
 
         } else {
@@ -366,6 +377,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                                 try {
                                     final String myResponse = response.body().string();
                                     Log.e("Response: ",myResponse);
+
                                     ParserXml parserXml = new ParserXml(TagGondola.this);
                                     Document doc = toXmlDocument(myResponse);
                                     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -600,7 +612,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                 try {
                     db = new ProductosDB(TagGondola.this);
                     list = db.loadProducto();
-                    adapter.setNotes(list);
+                    adapter.setNotes(list,m_communicationMethod,descuento);
                     adapter.notifyDataSetChanged();
 
                 } catch (Exception e) {
@@ -615,7 +627,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
         try {
             db = new ProductosDB(TagGondola.this);
             list = db.loadProducto();
-            adapter.setNotes(list);
+            adapter.setNotes(list,m_communicationMethod,descuento);
             adapter.notifyDataSetChanged();
 
         } catch (Exception e) {
@@ -723,40 +735,68 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
             case R.id.Imprimir_todo:
 
-                AlertDialog.Builder build = new AlertDialog.Builder(TagGondola.this);
 
-                build.setMessage("¿Desea imprimir toda la lista? ").setPositiveButton("Imprimir Sin Ofertas", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                if (m_communicationMethod.equals("TCP/IP")){
+                    AlertDialog.Builder build = new AlertDialog.Builder(TagGondola.this);
 
-                        tagimprimirall = true;
-                        imprimirofertas = false;
+                    build.setMessage("¿Desea imprimir toda la lista? ").setPositiveButton("Imprimir Todo", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-                        new Thread(TagGondola.this, "PrintingTask").start();
+                            tagimprimirall = true;
+                            imprimirofertas = false;
+                            new Thread(TagGondola.this, "PrintingTask").start();
+                        }
 
-                    }
-
-                }).setNeutralButton("Imprimir Ofertas", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        tagimprimirall = true;
-                        imprimirofertas = true;
-
-                        new Thread(TagGondola.this, "PrintingTask").start();
-
-                    }
-
-                }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
 
-                    }
-                });
+                        }
+                    });
 
-                AlertDialog alertDialog = build.create();
-                alertDialog.show();
+                    AlertDialog alertDialog = build.create();
+                    alertDialog.show();
+
+                }else{
+
+                    AlertDialog.Builder build = new AlertDialog.Builder(TagGondola.this);
+
+                    build.setMessage("¿Desea imprimir toda la lista? ").setPositiveButton("Imprimir Sin Ofertas", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            tagimprimirall = true;
+                            imprimirofertas = false;
+
+                            new Thread(TagGondola.this, "PrintingTask").start();
+
+                        }
+
+                    }).setNeutralButton("Imprimir Ofertas", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            tagimprimirall = true;
+                            imprimirofertas = true;
+
+                            new Thread(TagGondola.this, "PrintingTask").start();
+
+                        }
+
+                    }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+
+                        }
+                    });
+
+                    AlertDialog alertDialog = build.create();
+                    alertDialog.show();
+
+                }
 
 
                 break;
@@ -815,6 +855,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
             msgBuffer = m_data.getBytes();
 
             ImprimirWifi();
+
         }else if (m_printerComandMethod.equals("HONEYWELL")){
 
             m_data ="^XA\n" +
@@ -888,7 +929,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
     private void ImprimirWifi() {
 
-        DisplayPrintingStatusMessage("Imprimiendo TSPL.");
+        DisplayPrintingStatusMessage("Imprimiendo Wifi.");
 
         try
         {
@@ -1017,11 +1058,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                             if (cancelarrun) {
                                 break;
                             }
-
                             if (!prod.getIP().equals("SI")){
-
-                                if (imprimirofertas){
-                                    //todo SI ELEGI OFERTA
 
                                     if (prod.getOff_available().equals("S")) {
 
@@ -1030,11 +1067,10 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                                         if (m_printerComandMethod.equals("TSC")){
                                             msgBuffer = prepararTSPL(prod).getBytes();
                                         }else if(m_printerComandMethod.equals("HONEYWELL")){
-                                            msgBuffer = prepararDPL(prod).getBytes();
-                                        }else{
                                             msgBuffer = prepararDP(prod).getBytes();
+                                        }else{
+                                            msgBuffer = prepararDPL(prod).getBytes();
                                         }
-
                                         senddatoswifiTCP(conn,msgBuffer);
                                         Thread.sleep(100);
 
@@ -1050,35 +1086,6 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
                                     }
 
-                                }else{
-                                    //todo SI ELEGI NO OFERTA
-
-                                    if (prod.getOff_available().equals("N")) {
-                                        Asignar("Imprimiendo: ", prod.getDescArticulo_1());
-
-                                        if (m_printerComandMethod.equals("TSC")){
-                                            msgBuffer = prepararTSPL(prod).getBytes();
-                                        }else if(m_printerComandMethod.equals("HONEYWELL")){
-                                            msgBuffer = prepararDPL(prod).getBytes();
-                                        }else{
-                                            msgBuffer = prepararDP(prod).getBytes();
-                                        }
-
-                                        senddatoswifiTCP(conn,msgBuffer);
-                                        Thread.sleep(100);
-
-                                        prod.setIP("SI");
-                                        db.updatecodigoproduto(prod);
-
-                                        try {
-                                            Thread.sleep(500);
-                                        } catch (InterruptedException e) {
-                                            // TODO Auto-generated catch block
-                                            e.printStackTrace();
-                                        }
-
-                                    }
-                                }
                             }
                         }
                     }
@@ -1114,20 +1121,19 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                 "CODEPAGE 1252\n"+
                 "TEXT 777,498,\"arial_bl.TTF\",180,13,12,\"" + producto.getDescArticulo_1() + "\"\n"+
                 "TEXT 777,443,\"arial_na.TTF\",180,13,12,\""+ producto.getDescArticulo_2() +"\"\n";
-
+/*
         if(producto.getOff_available().equals("N")){
-
             m_data = m_data +
                     "TEXT 488,141,\"arial_bl.TTF\",180,11,27,\""+"$ " +producto.getPrecio_lista()+"\"\n"+
                     "PRINT 1,1\n";
-
         }else{
+*/
 
             m_data = m_data +
                     "TEXT 488,332,\"striketh.TTF\",180,10,8,\""+"$ " + producto.getPrecio_lista()+"\"\n"+
                     "TEXT 488,141,\"arial_bl.TTF\",180,11,27,\""+"$ " + producto.getPrecio() + "\"\n"+
                     "PRINT 1,1\n";
-        }
+        //}
 
 
 
@@ -1162,9 +1168,8 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                 "PP43,498:FONTSIZE 12\n" +
                 "PT \""+producto.getDescArticulo_2()+"\"\n";
 
-
+/*
         if(producto.getOff_available().equals("N")){
-
             m_data = m_data +
                     "PP374,400:FONTSIZE 24\n" +
                     "PT \""+producto.getPrecio_lista()+"^FS\n" +
@@ -1172,8 +1177,8 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                     "PF\n" +
                     "PRINT KEY OFF\n" +
                     "<xpml></page></xpml><xpml><end/></xpml>";
-
         }else{
+          */
             m_data = m_data +
 
                     "PP374,400:FONTSIZE 24\n" +
@@ -1184,7 +1189,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                     "PF\n" +
                     "PRINT KEY OFF\n" +
                     "<xpml></page></xpml><xpml><end/></xpml>";
-        }
+       // }
 
 
 
@@ -1211,22 +1216,18 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                 "^LRN\n"+
                 "^A0N,51,52^FO47,24^FD"+producto.getDescArticulo_1()+"^FS\n" +
                 "^A0N,34,34^FO53,82^FD"+producto.getDescArticulo_2() +"^FS\n" ;
-
-
-
+        /*
         if(producto.getOff_available().equals("N")){
-
             m_data = m_data +
-
                     "^A0N,101,102^FO366,373^FD$ "+producto.getPrecio_lista()+"^FS\n" +
                     "^XZ";
-
         }else{
+           */
             m_data = m_data +
                     "^A0N,56,56^FO405,180^FD$ "+ producto.getPrecio_lista()+"^FS\n" +
                     "^A0N,101,102^FO366,373^FD$ "+producto.getPrecio()+"^FS\n" +
                     "^XZ";
-        }
+       // }
 
         return m_data;
 

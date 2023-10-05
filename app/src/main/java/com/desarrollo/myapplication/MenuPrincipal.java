@@ -23,6 +23,7 @@ import com.desarrollo.myapplication.Configuracion.DOPrintMainActivity;
 import com.desarrollo.myapplication.Constantes.Constante;
 
 
+import com.desarrollo.myapplication.fragment.PorcentajeDescuento;
 import com.elo.device.DeviceManager;
 import com.elo.device.inventory.Inventory;
 
@@ -39,7 +40,7 @@ import java.io.ObjectInputStream;
 
 
 
-public class MenuPrincipal extends AppCompatActivity {
+public class MenuPrincipal extends AppCompatActivity implements PorcentajeDescuento.DiscountSelectionListener {
 
     private int condicion = 0;
     TextView text,txtversion;
@@ -83,7 +84,6 @@ public class MenuPrincipal extends AppCompatActivity {
         txtsucursal = findViewById(R.id.txt_sucursal);
         txtversion = findViewById(R.id.txtversion);
 
-
         btnwifi = findViewById(R.id.btnWifi);
         btnwifi.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,25 +91,21 @@ public class MenuPrincipal extends AppCompatActivity {
 
                 if (m_configurado != 0) {
 
-                    if (m_communicationMethod.equals("Bluetooth")){
+                    PorcentajeDescuento dialogFragment = new PorcentajeDescuento();
+                    dialogFragment.show(getFragmentManager(), "discount_dialog");
 
-                        Toast.makeText(MenuPrincipal.this, "Tiene Configurado la impresora por Bluettoh", Toast.LENGTH_SHORT).show();
-
-                    }else{
-
+                        /*
                         Intent intent2 = new Intent(MenuPrincipal.this, TagGondola.class);
                         intent2.putExtra("mac", m_printerMAC);
                         intent2.putExtra("suc", m_sucursal);
                         intent2.putExtra("ip", m_ip);
-                        intent2.putExtra("tipoconexion", m_communicationMethod);
+                        intent2.putExtra("tipoconexion", "TCP/IP");
                         intent2.putExtra("ipimpre", m_printerIP);
                         intent2.putExtra("portimpre", m_printerPort);
                         intent2.putExtra("PrinterComandMethod",m_printerComandMethod);
-
                         Log.e("portimpre","" +m_printerPort );
                         startActivity(intent2);
-
-                    }
+                        */
 
                 } else {
                     Toast.makeText(MenuPrincipal.this, "Debe configurar las opciones de la aplicacion", Toast.LENGTH_SHORT).show();
@@ -125,22 +121,17 @@ public class MenuPrincipal extends AppCompatActivity {
 
                 if (m_configurado != 0) {
 
-
-                    if (m_communicationMethod.equals("TCP/IP")){
-
-                        Toast.makeText(MenuPrincipal.this, "Tiene Configurado la impresora por WIFI", Toast.LENGTH_SHORT).show();
-
-                    }else{
-
                         Intent intent2 = new Intent(MenuPrincipal.this, ListTagGondola.class);
                         intent2.putExtra("mac", m_printerMAC);
                         intent2.putExtra("suc", m_sucursal);
                         intent2.putExtra("ip", m_ip);
+                        intent2.putExtra("tipoconexion", "Bluetooth");
+                        intent2.putExtra("ipimpre", m_printerIP);
+                        intent2.putExtra("portimpre", m_printerPort);
+                        intent2.putExtra("PrinterComandMethod",m_printerComandMethod);
+                        Log.e("portimpre","" +m_printerPort );
+
                         startActivity(intent2);
-
-                    }
-
-
 
                 } else {
 
@@ -159,16 +150,12 @@ public class MenuPrincipal extends AppCompatActivity {
 
                 if (m_configurado != 0) {
 
-                    if (m_communicationMethod.equals("TCP/IP")){
-                        Toast.makeText(MenuPrincipal.this, "Tiene Configurado la impresora por WIFI", Toast.LENGTH_SHORT).show();
-
-                    }else{
                         Intent intent2 = new Intent(MenuPrincipal.this, TagGondola.class);
+                        intent2.putExtra("tipoconexion", "Bluetooth");
                         intent2.putExtra("mac", m_printerMAC);
                         intent2.putExtra("suc", m_sucursal);
                         intent2.putExtra("ip", m_ip);
                         startActivity(intent2);
-                    }
 
                 } else {
                     Toast.makeText(MenuPrincipal.this,
@@ -396,4 +383,23 @@ public class MenuPrincipal extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    @Override
+    public void onDiscountSelected(int discount) {
+
+        // Puedes pasarlo a ActivityTaggondola o realizar otras acciones
+
+        Intent intent = new Intent(this, TagGondola.class);
+
+        intent.putExtra("descuento", discount);
+        intent.putExtra("mac", m_printerMAC);
+        intent.putExtra("suc", m_sucursal);
+        intent.putExtra("ip", m_ip);
+        intent.putExtra("tipoconexion", "TCP/IP");
+        intent.putExtra("ipimpre", m_printerIP);
+        intent.putExtra("portimpre", m_printerPort);
+        intent.putExtra("PrinterComandMethod",m_printerComandMethod);
+
+        startActivity(intent);
+    }
 }
