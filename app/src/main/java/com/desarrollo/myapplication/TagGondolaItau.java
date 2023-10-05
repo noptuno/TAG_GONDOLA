@@ -5,9 +5,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -72,9 +72,9 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class TagGondola extends AppCompatActivity implements BarcodeReader.BarcodeListener, BarcodeReader.TriggerListener, Runnable {
+public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.BarcodeListener, BarcodeReader.TriggerListener, Runnable {
     byte[] msgBuffer;
-    private com.honeywell.aidc.BarcodeReader barcodeReader;
+    private BarcodeReader barcodeReader;
     private Handler m_handler = new Handler(); // Main thread
     private TextView textView2;
     private EditText codigomanual;
@@ -91,8 +91,8 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
     ConnectionBase conn = null;
     private ProductoAdapter adapter;
-    private ProductosDB db;
-    private ProductosDBItau dbItau;
+    private ProductosDBItau db;
+
     private Button boton, buttonxml;
     private String ultimocodigo = "ultimocodigo";
     private boolean tagimprimirall = false;
@@ -166,7 +166,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
             @Override
             public void onClick(View v) {
                 try {
-                    db = new ProductosDB(TagGondola.this);
+                    db = new ProductosDBItau(TagGondolaItau.this);
                     Producto pro = new Producto("PRODUCTO DE PRUEBA TAMAÑOS", "SEGUNDA DESCRIPCION DEL PRODUCTO", "116663", "1111690712025", "12.000", "6", "7", "8", "9", "10", "11", "N", "OFERTA","9999");
                     db.insertarProducto(pro);
                     cargarLista();
@@ -183,7 +183,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
                 lista_producto_seleccionada = producto;
 
-                new Thread(TagGondola.this, "PrintingTask").start();
+                new Thread(TagGondolaItau.this, "PrintingTask").start();
             }
         });
 
@@ -201,7 +201,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
 
                 try {
-                    db = new ProductosDB(TagGondola.this);
+                    db = new ProductosDBItau(TagGondolaItau.this);
                     db.eliminarProducto(adapter.getNoteAt(viewHolder.getAdapterPosition()).getCodigoProducto());
                     ultimocodigo = "ultimocodigo";
                     cargarLista();
@@ -311,7 +311,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
             try {
                 barcodeReader.claim();
             } catch (ScannerUnavailableException e) {
-                e.printStackTrace();   
+                e.printStackTrace();
                 Toast.makeText(this, "Scanner unavailable", Toast.LENGTH_SHORT).show();
             }
         }
@@ -380,7 +380,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                                     final String myResponse = response.body().string();
                                     Log.e("Response: ",myResponse);
 
-                                    ParserXml parserXml = new ParserXml(TagGondola.this);
+                                    ParserXml parserXml = new ParserXml(TagGondolaItau.this);
                                     Document doc = toXmlDocument(myResponse);
                                     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                                     Source xmlSource = new DOMSource(doc);
@@ -572,7 +572,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
 
-        ParserXml par = new ParserXml(TagGondola.this);
+        ParserXml par = new ParserXml(TagGondolaItau.this);
         List<Producto> entries = null;
 
         try {
@@ -615,7 +615,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
             @Override
             public void run() {
                 try {
-                    db = new ProductosDB(TagGondola.this);
+                    db = new ProductosDBItau(TagGondolaItau.this);
                     list = db.loadProducto();
                     adapter.setNotes(list,m_communicationMethod,descuento);
                     adapter.notifyDataSetChanged();
@@ -630,7 +630,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
     private void cargarLista() {
         try {
-            db = new ProductosDB(TagGondola.this);
+            db = new ProductosDBItau(TagGondolaItau.this);
             list = db.loadProducto();
             adapter.setNotes(list,m_communicationMethod,descuento);
             adapter.notifyDataSetChanged();
@@ -649,11 +649,11 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
     public void Limpiar() {
         try {
-            db = new ProductosDB(TagGondola.this);
+            db = new ProductosDBItau(TagGondolaItau.this);
             db.eliminarProductos();
             ultimocodigo = "ultimocodigo";
             cargarLista();
-            Toast.makeText(TagGondola.this, "Se Limpio la Lista", Toast.LENGTH_LONG).show();
+            Toast.makeText(TagGondolaItau.this, "Se Limpio la Lista", Toast.LENGTH_LONG).show();
 
         } catch (Exception e) {
             Log.e("error", "mensaje");
@@ -666,7 +666,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
             case R.id.limpiar:
 
-                AlertDialog.Builder build4 = new AlertDialog.Builder(TagGondola.this);
+                AlertDialog.Builder build4 = new AlertDialog.Builder(TagGondolaItau.this);
                 build4.setMessage("¿Desea borrar lista? ").setPositiveButton("Borrar lista", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -689,7 +689,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
             case R.id.test_impresion:
 
-                AlertDialog.Builder build3 = new AlertDialog.Builder(TagGondola.this);
+                AlertDialog.Builder build3 = new AlertDialog.Builder(TagGondolaItau.this);
                 build3.setMessage("¿Desea imprimir un test de impresión? ").setPositiveButton("Imprimir test", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -742,7 +742,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
 
                 if (m_communicationMethod.equals("TCP/IP")){
-                    AlertDialog.Builder build = new AlertDialog.Builder(TagGondola.this);
+                    AlertDialog.Builder build = new AlertDialog.Builder(TagGondolaItau.this);
 
                     build.setMessage("¿Desea imprimir toda la lista? ").setPositiveButton("Imprimir Todo", new DialogInterface.OnClickListener() {
                         @Override
@@ -750,7 +750,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
                             tagimprimirall = true;
                             imprimirofertas = false;
-                            new Thread(TagGondola.this, "PrintingTask").start();
+                            new Thread(TagGondolaItau.this, "PrintingTask").start();
                         }
 
                     }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -766,7 +766,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
                 }else{
 
-                    AlertDialog.Builder build = new AlertDialog.Builder(TagGondola.this);
+                    AlertDialog.Builder build = new AlertDialog.Builder(TagGondolaItau.this);
 
                     build.setMessage("¿Desea imprimir toda la lista? ").setPositiveButton("Imprimir Sin Ofertas", new DialogInterface.OnClickListener() {
                         @Override
@@ -775,7 +775,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                             tagimprimirall = true;
                             imprimirofertas = false;
 
-                            new Thread(TagGondola.this, "PrintingTask").start();
+                            new Thread(TagGondolaItau.this, "PrintingTask").start();
 
                         }
 
@@ -786,7 +786,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                             tagimprimirall = true;
                             imprimirofertas = true;
 
-                            new Thread(TagGondola.this, "PrintingTask").start();
+                            new Thread(TagGondolaItau.this, "PrintingTask").start();
 
                         }
 
@@ -808,7 +808,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
             case R.id.Restaurar:
 
-                AlertDialog.Builder build2 = new AlertDialog.Builder(TagGondola.this);
+                AlertDialog.Builder build2 = new AlertDialog.Builder(TagGondolaItau.this);
                 build2.setMessage("¿Desea restaurar tags impresos? ").setPositiveButton("Restaurar tags impresos", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -1057,7 +1057,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
                         //TODO IMPRIMIR VARIOS
 
-                        db = new ProductosDB(TagGondola.this);
+                        db = new ProductosDBItau(TagGondolaItau.this);
                         for (Producto prod : list) {
 
                             if (cancelarrun) {
@@ -1295,7 +1295,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
             //TODO IMPRIMIR VARIOS
 
-            db = new ProductosDB(TagGondola.this);
+            db = new ProductosDBItau(TagGondolaItau.this);
             for (Producto prod : list) {
 
                 if (cancelarrun) {

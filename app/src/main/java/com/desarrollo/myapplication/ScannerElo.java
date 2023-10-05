@@ -84,8 +84,6 @@ public class ScannerElo extends AppCompatActivity {
     private String m_ip = null;
     private ApiAdapter apiAdapter;
 
-
-
     private Inventory inventory;
     private Handler m_handler = new Handler(); // Main thread
     private Request RequestPicking;
