@@ -10,7 +10,7 @@ import com.desarrollo.myapplication.R;
 public class PorcentajeDescuento extends DialogFragment {
 
     // Definir una interfaz para manejar la selección de descuento
-
+//todo prueba de cambios
     public interface DiscountSelectionListener {
         void onDiscountSelected(int discount);
     }
