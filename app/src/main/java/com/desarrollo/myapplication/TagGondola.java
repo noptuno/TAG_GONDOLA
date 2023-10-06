@@ -25,7 +25,6 @@ import android.widget.Toast;
 
 import com.desarrollo.myapplication.Adapter.ProductoAdapter;
 import com.desarrollo.myapplication.BaseDatos.ProductosDB;
-import com.desarrollo.myapplication.BaseDatos.ProductosDBItau;
 import com.desarrollo.myapplication.Clases.Producto;
 import com.desarrollo.myapplication.ParsearXML.ParserXml;
 import com.example.tscdll.TSCActivity;
@@ -92,7 +91,6 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
     ConnectionBase conn = null;
     private ProductoAdapter adapter;
     private ProductosDB db;
-    private ProductosDBItau dbItau;
     private Button boton, buttonxml;
     private String ultimocodigo = "ultimocodigo";
     private boolean tagimprimirall = false;
@@ -704,8 +702,6 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
                                         ImprimirBluetothTsc();
 
-                                    }else{
-                                        prepararCodigo();
                                     }
 
                                     EnableDialog(false, "Enviando terminando...",false);
@@ -740,31 +736,6 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
             case R.id.Imprimir_todo:
 
-
-                if (m_communicationMethod.equals("TCP/IP")){
-                    AlertDialog.Builder build = new AlertDialog.Builder(TagGondola.this);
-
-                    build.setMessage("¿Desea imprimir toda la lista? ").setPositiveButton("Imprimir Todo", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            tagimprimirall = true;
-                            imprimirofertas = false;
-                            new Thread(TagGondola.this, "PrintingTask").start();
-                        }
-
-                    }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-
-                        }
-                    });
-
-                    AlertDialog alertDialog = build.create();
-                    alertDialog.show();
-
-                }else{
 
                     AlertDialog.Builder build = new AlertDialog.Builder(TagGondola.this);
 
@@ -801,8 +772,6 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
                     AlertDialog alertDialog = build.create();
                     alertDialog.show();
 
-                }
-
 
                 break;
 
@@ -835,140 +804,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
         return super.onOptionsItemSelected(item);
     }
 
-    private void prepararCodigo() {
 
-        String m_data = "";
-        if (m_printerComandMethod.equals("TSC")){
-
-            m_data = "SIZE 99.10 mm, 71.1 mm\n"+
-                    "BLINE 3 mm, 0 mm\n"+
-                    "DIRECTION 0,0\n"+
-                    "REFERENCE 0,0\n"+
-                    "OFFSET 0 mm\n"+
-                    "SET PEEL OFF\n"+
-                    "SET CUTTER OFF\n"+
-                    "SET PARTIAL_CUTTER OFF\n"+
-                    "SET TEAR ON\n"+
-                    "CLS\n"+
-                    "CODEPAGE 1252\n"+
-                    "TEXT 777,498,\"arial_bl.TTF\",180,13,12,\"Nombre Producto\"\n"+
-                    "TEXT 777,443,\"arial_na.TTF\",180,13,12,\"Segundo Nombre producto\"\n"+
-                    "TEXT 488,332,\"striketh.TTF\",180,10,8,\"$ 1200\"\n"+
-                    "TEXT 488,141,\"arial_bl.TTF\",180,11,27,\"$ 980\"\n"+
-                    "PRINT 1,1\n";
-
-            msgBuffer = m_data.getBytes();
-
-            ImprimirWifi();
-
-        }else if (m_printerComandMethod.equals("HONEYWELL")){
-
-            m_data ="^XA\n" +
-                    "^PW799\n" +
-                    "^LL650\n" +
-                    "^MMT\n" +
-                    "^XZ\n" +
-                    "^XA\n" +
-                    "^CI28\n" +
-                    "^FWI\n" +
-                    "^CF0,30\n"+
-                    "^LH0,0\n" +
-                    "^PON\n" +
-                    "^MD0\n" +
-                    "^PQ1,0,1,Y\n" +
-                    "^XZ\n" +
-                    "^XA\n" +
-                    "^LRN\n" +
-                    "^A0N,51,52^FO47,24^FDProducto 1^FS\n" +
-                    "^A0N,34,34^FO53,82^FDProducto 2^FS\n" +
-                    "^A0N,56,56^FO405,180^FD$ 20000^FS\n" +
-                    "^A0N,101,102^FO366,373^FD$ 10000^FS\n" +
-                    "^XZ";
-
-            msgBuffer = m_data.getBytes();
-
-            ImprimirWifi();
-
-        }else{
-
-            m_data ="<xpml><page quantity='0' pitch='70.1 mm'></xpml>'Seagull:2.1:DP\n" +
-                    "INPUT OFF\n" +
-                    "VERBOFF\n" +
-                    "INPUT ON\n" +
-                    "SYSVAR(48) = 0\n" +
-                    "SYSVAR(35)=0\n" +
-                    "OPEN \"tmp:setup.sys\" FOR OUTPUT AS #1\n" +
-                    "PRINT#1,\"Printing,Media,Print Area,Media Margin (X),0\"\n" +
-                    "PRINT#1,\"Printing,Media,Clip Default,On\"\n" +
-                    "CLOSE #1\n" +
-                    "SETUP \"tmp:setup.sys\"\n" +
-                    "KILL \"tmp:setup.sys\"\n" +
-                    "CLIP ON\n" +
-                    "CLIP BARCODE ON\n" +
-                    "LBLCOND 3,2\n" +
-                    "<xpml></page></xpml><xpml><page quantity='1' pitch='70.1 mm'></xpml>CLL\n" +
-                    "OPTIMIZE \"BATCH\" ON\n" +
-                    "PP41,550:AN7\n" +
-                    "NASC 8\n" +
-                    "FT \"Univers Condensed Bold\"\n" +
-                    "FONTSIZE 14\n" +
-                    "FONTSLANT 0\n" +
-                    "PT \"Descripcion 1\"\n" +
-                    "PP43,498:FONTSIZE 12\n" +
-                    "PT \"Descripcion 2\"\n" +
-                    "PP374,400:FONTSIZE 24\n" +
-                    "PT \"$ 5000\"\n" +
-                    "PP370,215:FONTSIZE 36\n" +
-                    "PT \"$ 4000\"\n" +
-                    "LAYOUT RUN \"\"\n" +
-                    "PF\n" +
-                    "PRINT KEY OFF\n" +
-                    "<xpml></page></xpml><xpml><end/></xpml>";
-
-            msgBuffer = m_data.getBytes();
-
-            ImprimirWifi();
-
-        }
-    }
-
-    private void ImprimirWifi() {
-
-        DisplayPrintingStatusMessage("Imprimiendo Wifi.");
-
-        try
-        {
-            conn = null;
-            conn = Connection_TCP.createClient(m_printerIP,m_printerPort , false);
-            if(!conn.getIsOpen()) {
-                conn.open();
-            }
-
-            int bytesWritten = 0;
-            int bytesToWrite = 1024;
-            int totalBytes = msgBuffer.length;
-            int remainingBytes = totalBytes;
-            while (bytesWritten < totalBytes)
-            {
-                if (remainingBytes < bytesToWrite)
-                    bytesToWrite = remainingBytes;
-
-                //Send data, 1024 bytes at a time until all data sent
-                conn.write(msgBuffer, bytesWritten, bytesToWrite);
-                bytesWritten += bytesToWrite;
-                remainingBytes = remainingBytes - bytesToWrite;
-                Thread.sleep(100);
-            }
-
-            //signals to close connection
-            conn.close();
-        } catch (Exception e) {
-            if(conn != null)
-                conn.close();
-            e.printStackTrace();
-        }
-
-    }
 
     private void ImprimirBluetothTsc() {
 
@@ -1005,8 +841,6 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
 
                 ImprimirBluetothTsc2();
 
-            }else{
-                ImprimirWifi2();
             }
 
         } catch (Exception e) {
@@ -1019,241 +853,7 @@ public class TagGondola extends AppCompatActivity implements BarcodeReader.Barco
         }
     }
 
-    private void ImprimirDPLWifi2() {
 
-    }
-
-    private void ImprimirWifi2() {
-
-        try
-        {
-
-            conn = null;
-            conn = Connection_TCP.createClient(m_printerIP,m_printerPort , false);
-            if(!conn.getIsOpen()) {
-                conn.open();
-            }
-
-            if (!tagimprimirall) {
-
-                        //todo IMPRIMIR 1
-                        Asignar("Imprimiendo: ", lista_producto_seleccionada.getDescArticulo_1());
-
-                        if (m_printerComandMethod.equals("TSC")){
-                            msgBuffer = prepararTSPL(lista_producto_seleccionada).getBytes();
-                        }else if(m_printerComandMethod.equals("HONEYWELL")){
-                            msgBuffer = prepararDP(lista_producto_seleccionada).getBytes();
-                        }else{
-                            msgBuffer = prepararDPL(lista_producto_seleccionada).getBytes();
-                        }
-
-                        senddatoswifiTCP(conn,msgBuffer);
-
-                        Thread.sleep(100);
-                        lista_producto_seleccionada.setIP("SI");
-                        db.updatecodigoproduto(lista_producto_seleccionada);
-
-                    }else {
-
-                        //TODO IMPRIMIR VARIOS
-
-                        db = new ProductosDB(TagGondola.this);
-                        for (Producto prod : list) {
-
-                            if (cancelarrun) {
-                                break;
-                            }
-                            if (!prod.getIP().equals("SI")){
-
-                                    if (prod.getOff_available().equals("S")) {
-
-                                        Asignar("Imprimiendo: ", prod.getDescArticulo_1());
-
-                                        if (m_printerComandMethod.equals("TSC")){
-                                            msgBuffer = prepararTSPL(prod).getBytes();
-                                        }else if(m_printerComandMethod.equals("HONEYWELL")){
-                                            msgBuffer = prepararDP(prod).getBytes();
-                                        }else{
-                                            msgBuffer = prepararDPL(prod).getBytes();
-                                        }
-                                        senddatoswifiTCP(conn,msgBuffer);
-                                        Thread.sleep(100);
-
-                                        prod.setIP("SI");
-                                        db.updatecodigoproduto(prod);
-
-                                        try {
-                                            Thread.sleep(500);
-                                        } catch (InterruptedException e) {
-                                            // TODO Auto-generated catch block
-                                            e.printStackTrace();
-                                        }
-
-                                    }
-
-                            }
-                        }
-                    }
-
-            conn.close();
-        } catch (Exception e) {
-            if(conn != null)
-                conn.close();
-            e.printStackTrace();
-        }
-
-        cargarLista2();
-
-        EnableDialog(false, "",false);
-
-        cancelarrun = false;
-        tagimprimirall = false;
-
-    }
-
-    private String prepararTSPL(Producto producto) {
-
-        String m_data = "SIZE 99.10 mm, 71.1 mm\n"+
-                "BLINE 3 mm, 0 mm\n"+
-                "DIRECTION 0,0\n"+
-                "REFERENCE 0,0\n"+
-                "OFFSET 0 mm\n"+
-                "SET PEEL OFF\n"+
-                "SET CUTTER OFF\n"+
-                "SET PARTIAL_CUTTER OFF\n"+
-                "SET TEAR ON\n"+
-                "CLS\n"+
-                "CODEPAGE 1252\n"+
-                "TEXT 777,498,\"arial_bl.TTF\",180,13,12,\"" + producto.getDescArticulo_1() + "\"\n"+
-                "TEXT 777,443,\"arial_na.TTF\",180,13,12,\""+ producto.getDescArticulo_2() +"\"\n";
-/*
-        if(producto.getOff_available().equals("N")){
-            m_data = m_data +
-                    "TEXT 488,141,\"arial_bl.TTF\",180,11,27,\""+"$ " +producto.getPrecio_lista()+"\"\n"+
-                    "PRINT 1,1\n";
-        }else{
-*/
-
-            m_data = m_data +
-                    "TEXT 488,332,\"striketh.TTF\",180,10,8,\""+"$ " + producto.getPrecio_lista()+"\"\n"+
-                    "TEXT 488,141,\"arial_bl.TTF\",180,11,27,\""+"$ " + producto.getPrecio() + "\"\n"+
-                    "PRINT 1,1\n";
-        //}
-
-
-
-        return m_data;
-    }
-
-    private String prepararDP(Producto producto){
-
-        String m_data =
-                "<xpml><page quantity='0' pitch='70.1 mm'></xpml>'Seagull:2.1:DP\n" +
-                        "INPUT OFF\n" +
-                        "VERBOFF\n" +
-                        "INPUT ON\n" +
-                        "SYSVAR(48) = 0\n" +
-                        "ERROR 15,\"FONT NOT FOUND\"\n" +
-                        "ERROR 18,\"DISK FULL\"\n" +
-                        "ERROR 26,\"PARAMETER TOO LARGE\"\n" +
-                        "ERROR 27,\"PARAMETER TOO SMALL\"\n" +
-                        "ERROR 37,\"CUTTER DEVICE NOT FOUND\"\n" +
-                        "ERROR 1003,\"FIELD OUT OF LABEL\"\n" +
-                        "SYSVAR(35)=0\n" +
-                        "OPEN \"tmp:setup.sys\" FOR OUTPUT AS #1\n" +
-                        "PRINT#1,\"Printing,Media,Print Area,Media Margin (X),0\"\n" +
-                        "PRINT#1,\"Printing,Media,Clip Default,On\"\n" +
-                        "CLOSE #1\n" +
-                        "SETUP \"tmp:setup.sys\"\n" +
-                        "KILL \"tmp:setup.sys\"\n" +
-                        "CLIP ON\n" +
-                        "CLIP BARCODE ON\n" +
-                        "LBLCOND 3,2\n" +
-                        "<xpml></page></xpml><xpml><page quantity='1' pitch='70.1 mm'></xpml>CLL\n" +
-                        "OPTIMIZE \"BATCH\" ON\n" +
-                        "PP41,550:AN7\n" +
-                        "NASC 8\n" +
-                        "FT \"Univers Condensed Bold\"\n" +
-                        "FONTSIZE 14\n" +
-                        "FONTSLANT 0\n" +
-                        "PT \""+producto.getDescArticulo_1()+"\"\n" +
-                        "PP43,498:FONTSIZE 12\n" +
-                        "PT \""+producto.getDescArticulo_2()+"\"\n" +
-                        "PP380,394:FT \"Univers Condensed Bold\",18,0,102\n" +
-                        "PT \"" + "$" + producto.getPrecio_lista()+"\"\n" +
-                        "PP333,225:FT \"Univers Condensed Bold\"\n" +
-                        "FONTSIZE 36\n" +
-                        "FONTSLANT 0\n" +
-                        "PT \""+"$ " + producto.getPrecio() + " \"\n" +
-                        "LAYOUT RUN \"\"\n" +
-                        "PF\n" +
-                        "PRINT KEY OFF\n" +
-                        "<xpml></page></xpml><xpml><end/></xpml>";
-
-
-
-
-        return m_data;
-    }
-
-    private String prepararDPL(Producto producto) {
-
-        String m_data ="^XA\n" +
-                "^PW799\n" +
-                "^LL650\n" +
-                "^MMT\n" +
-                "^XZ\n" +
-                "^XA\n" +
-                "^CI28\n" +
-                "^FWI\n" +
-                "^CF0,30\n" +
-                "^LH0,0\n" +
-                "^PON\n" +
-                "^MD0\n" +
-                "^PQ1,0,1,Y\n" +
-                "^XZ\n" +
-                "^XA\n" +
-                "^LRN\n"+
-                "^A0N,51,52^FO47,24^FD"+producto.getDescArticulo_1()+"^FS\n" +
-                "^A0N,34,34^FO53,82^FD"+producto.getDescArticulo_2() +"^FS\n" ;
-        /*
-        if(producto.getOff_available().equals("N")){
-            m_data = m_data +
-                    "^A0N,101,102^FO366,373^FD$ "+producto.getPrecio_lista()+"^FS\n" +
-                    "^XZ";
-        }else{
-           */
-            m_data = m_data +
-                    "^A0N,56,56^FO405,180^FD$ "+ producto.getPrecio_lista()+"^FS\n" +
-                    "^A0N,101,102^FO366,373^FD$ "+producto.getPrecio()+"^FS\n" +
-                    "^XZ";
-       // }
-
-        return m_data;
-
-    }
-
-
-
-    private void senddatoswifiTCP(ConnectionBase conn, byte[] msgBuffer) {
-
-        int bytesWritten = 0;
-        int bytesToWrite = 1024;
-        int totalBytes = msgBuffer.length;
-        int remainingBytes = totalBytes;
-        while (bytesWritten < totalBytes)
-        {
-            if (remainingBytes < bytesToWrite)
-                bytesToWrite = remainingBytes;
-
-            //Send data, 1024 bytes at a time until all data sent
-            conn.write(msgBuffer, bytesWritten, bytesToWrite);
-            bytesWritten += bytesToWrite;
-            remainingBytes = remainingBytes - bytesToWrite;
-
-        }
-
-    }
 
     private void ImprimirBluetothTsc2() {
         String estado = "00";

@@ -28,6 +28,7 @@ import com.desarrollo.myapplication.BaseDatos.ProductosDB;
 import com.desarrollo.myapplication.BaseDatos.ProductosDBItau;
 import com.desarrollo.myapplication.Clases.Producto;
 import com.desarrollo.myapplication.ParsearXML.ParserXml;
+import com.desarrollo.myapplication.ParsearXML.ParserXmlItau;
 import com.example.tscdll.TSCActivity;
 import com.honeywell.aidc.BarcodeFailureEvent;
 import com.honeywell.aidc.BarcodeReadEvent;
@@ -380,14 +381,14 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
                                     final String myResponse = response.body().string();
                                     Log.e("Response: ",myResponse);
 
-                                    ParserXml parserXml = new ParserXml(TagGondolaItau.this);
+                                    ParserXmlItau parserXml = new ParserXmlItau(TagGondolaItau.this);
                                     Document doc = toXmlDocument(myResponse);
                                     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                                     Source xmlSource = new DOMSource(doc);
                                     Result outputTarget = new StreamResult(outputStream);
                                     TransformerFactory.newInstance().newTransformer().transform(xmlSource, outputTarget);
                                     InputStream is = new ByteArrayInputStream(outputStream.toByteArray());
-                                    if (parserXml.parsear(is)) {
+                                    if (parserXml.parsear(is,descuento)) {
                                         DisplayPrintingStatusMessage("Correcto");
                                         cargarLista2();
                                         ultimocodigo = codigocaptrado;
@@ -700,11 +701,8 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
 
                                     EnableDialog(true, "Enviando Documento...",true);
 
-                                    if (m_communicationMethod.equals("Bluetooth")){
+                                    if (m_communicationMethod.equals("TCP/IP")){
 
-                                        ImprimirBluetothTsc();
-
-                                    }else{
                                         prepararCodigo();
                                     }
 
@@ -742,6 +740,7 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
 
 
                 if (m_communicationMethod.equals("TCP/IP")){
+
                     AlertDialog.Builder build = new AlertDialog.Builder(TagGondolaItau.this);
 
                     build.setMessage("¿Desea imprimir toda la lista? ").setPositiveButton("Imprimir Todo", new DialogInterface.OnClickListener() {
@@ -751,43 +750,6 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
                             tagimprimirall = true;
                             imprimirofertas = false;
                             new Thread(TagGondolaItau.this, "PrintingTask").start();
-                        }
-
-                    }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-
-                        }
-                    });
-
-                    AlertDialog alertDialog = build.create();
-                    alertDialog.show();
-
-                }else{
-
-                    AlertDialog.Builder build = new AlertDialog.Builder(TagGondolaItau.this);
-
-                    build.setMessage("¿Desea imprimir toda la lista? ").setPositiveButton("Imprimir Sin Ofertas", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            tagimprimirall = true;
-                            imprimirofertas = false;
-
-                            new Thread(TagGondolaItau.this, "PrintingTask").start();
-
-                        }
-
-                    }).setNeutralButton("Imprimir Ofertas", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                            tagimprimirall = true;
-                            imprimirofertas = true;
-
-                            new Thread(TagGondolaItau.this, "PrintingTask").start();
-
                         }
 
                     }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -970,28 +932,6 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
 
     }
 
-    private void ImprimirBluetothTsc() {
-
-
-        TscDll.openport(m_printerMAC);
-        TscDll.setup(76, 35, 2, 1, 1, 4, 0);
-        TscDll.clearbuffer();
-        TscDll.sendcommand("CODEPAGE UTF-8\n");
-        TscDll.sendcommand("SET TEAR ON\n");
-        TscDll.sendcommand("DIRECTION 0\n");
-        TscDll.sendcommand("TEXT 70,20,\"arial_na.TTF\",0,11,11,\"" + "descripcion1" + "\"\n");
-        TscDll.sendcommand("TEXT 70,55,\"arial_na.TTF\",0,08,08,\"" + "descripcion2" + "\"\n");
-        TscDll.sendcommand("TEXT 80,90,\"arial_na.TTF\",0,08,08,\"" + "Precio Anterior" + "\"\n");
-        TscDll.sendcommand("TEXT 70,120,\"strike_t.TTF\",0,13,13,\"" + "$ 1.250" + "\"\n");
-        TscDll.sendcommand("TEXT 280,80,\"arial_na.TTF\",0,08,08,\"" + "Precio" + "\"\n");
-        TscDll.sendcommand("TEXT 280,115,\"arial_bl.TTF\",0,20,20,\"" + "$ 1.600" + "\"\n");
-        TscDll.sendcommand("TEXT 400,190,\"arial_na.TTF\",0,11,11,\"" + "123456" + "\"\n");
-        TscDll.barcode(70, 180, "128", 30, 1, 0, 1, 1, "123456");
-        TscDll.printlabel(1, 1);
-        TscDll.closeport(500);
-
-    }
-
 
     @Override
     public void run() {
@@ -1001,11 +941,8 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
             EnableDialog(true, "Imprimiendo...",true);
 
 
-            if (m_communicationMethod.equals("Bluetooth")){
+            if (m_communicationMethod.equals("TCP/IP")){
 
-                ImprimirBluetothTsc2();
-
-            }else{
                 ImprimirWifi2();
             }
 
@@ -1019,9 +956,7 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
         }
     }
 
-    private void ImprimirDPLWifi2() {
 
-    }
 
     private void ImprimirWifi2() {
 
@@ -1126,28 +1061,20 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
                 "CODEPAGE 1252\n"+
                 "TEXT 777,498,\"arial_bl.TTF\",180,13,12,\"" + producto.getDescArticulo_1() + "\"\n"+
                 "TEXT 777,443,\"arial_na.TTF\",180,13,12,\""+ producto.getDescArticulo_2() +"\"\n";
-/*
-        if(producto.getOff_available().equals("N")){
-            m_data = m_data +
-                    "TEXT 488,141,\"arial_bl.TTF\",180,11,27,\""+"$ " +producto.getPrecio_lista()+"\"\n"+
-                    "PRINT 1,1\n";
-        }else{
-*/
 
-            m_data = m_data +
+        m_data = m_data +
                     "TEXT 488,332,\"striketh.TTF\",180,10,8,\""+"$ " + producto.getPrecio_lista()+"\"\n"+
                     "TEXT 488,141,\"arial_bl.TTF\",180,11,27,\""+"$ " + producto.getPrecio() + "\"\n"+
                     "PRINT 1,1\n";
-        //}
-
-
 
         return m_data;
     }
 
     private String prepararDP(Producto producto){
 
+
         String m_data =
+
                 "<xpml><page quantity='0' pitch='70.1 mm'></xpml>'Seagull:2.1:DP\n" +
                         "INPUT OFF\n" +
                         "VERBOFF\n" +
@@ -1190,9 +1117,6 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
                         "PRINT KEY OFF\n" +
                         "<xpml></page></xpml><xpml><end/></xpml>";
 
-
-
-
         return m_data;
     }
 
@@ -1216,24 +1140,15 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
                 "^LRN\n"+
                 "^A0N,51,52^FO47,24^FD"+producto.getDescArticulo_1()+"^FS\n" +
                 "^A0N,34,34^FO53,82^FD"+producto.getDescArticulo_2() +"^FS\n" ;
-        /*
-        if(producto.getOff_available().equals("N")){
-            m_data = m_data +
-                    "^A0N,101,102^FO366,373^FD$ "+producto.getPrecio_lista()+"^FS\n" +
-                    "^XZ";
-        }else{
-           */
             m_data = m_data +
                     "^A0N,56,56^FO405,180^FD$ "+ producto.getPrecio_lista()+"^FS\n" +
                     "^A0N,101,102^FO366,373^FD$ "+producto.getPrecio()+"^FS\n" +
                     "^XZ";
-       // }
+
 
         return m_data;
 
     }
-
-
 
     private void senddatoswifiTCP(ConnectionBase conn, byte[] msgBuffer) {
 
@@ -1255,143 +1170,5 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
 
     }
 
-    private void ImprimirBluetothTsc2() {
-        String estado = "00";
-
-        TscDll.openport(m_printerMAC);
-        TscDll.setup(76, 35, 2, 1, 1, 4, 0);
-
-        if (!tagimprimirall) {
-
-            //todo IMPRIMIR 1
-
-
-            Asignar("Imprimiendo: ", lista_producto_seleccionada.getDescArticulo_1());
-            TscDll.clearbuffer();
-            TscDll.sendcommand("CODEPAGE UTF-8\n");
-            TscDll.sendcommand("SET TEAR ON\n");
-            TscDll.sendcommand("DIRECTION 0\n");
-            TscDll.sendcommand("TEXT 70,20,\"arial_na.TTF\",0,11,11,\"" + lista_producto_seleccionada.getDescArticulo_1() + "\"\n");
-            TscDll.sendcommand("TEXT 70,55,\"arial_na.TTF\",0,08,08,\"" + lista_producto_seleccionada.getDescArticulo_2() + "\"\n");
-            TscDll.sendcommand("TEXT 280,80,\"arial_na.TTF\",0,08,08,\"" + "Precio" + "\"\n");
-
-            if(lista_producto_seleccionada.getOff_available().equals("N")){
-
-                TscDll.sendcommand("TEXT 280,115,\"arial_bl.TTF\",0,20,20,\"" + "$ " + lista_producto_seleccionada.getPrecio_lista() + "\"\n");
-            }else{
-                TscDll.sendcommand("TEXT 80,90,\"arial_na.TTF\",0,08,08,\"" + "Precio Anterior" + "\"\n");
-                TscDll.sendcommand("TEXT 70,120,\"strike_t.TTF\",0,13,13,\"" + "$ " + lista_producto_seleccionada.getPrecio_lista() + "\"\n");
-                TscDll.sendcommand("TEXT 280,115,\"arial_bl.TTF\",0,20,20,\"" + "$ " + lista_producto_seleccionada.getPrecio() + "\"\n");
-            }
-            TscDll.sendcommand("TEXT 400,190,\"arial_na.TTF\",0,11,11,\"" + lista_producto_seleccionada.getCodProd() + "\"\n");
-            TscDll.barcode(70, 180, "128", 30, 1, 0, 1, 1, lista_producto_seleccionada.getCodBarras());
-            TscDll.printlabel(1, 1);
-
-            lista_producto_seleccionada.setIP("SI");
-            db.updatecodigoproduto(lista_producto_seleccionada);
-
-
-        } else {
-
-            //TODO IMPRIMIR VARIOS
-
-            db = new ProductosDBItau(TagGondolaItau.this);
-            for (Producto prod : list) {
-
-                if (cancelarrun) {
-                    break;
-                }
-
-                if (!prod.getIP().equals("SI")){
-
-                    if (imprimirofertas){
-                        //todo SI ELEGI OFERTA
-
-                        if (prod.getOff_available().equals("S")) {
-                            Asignar("Imprimiendo: ", prod.getDescArticulo_1());
-
-                            TscDll.clearbuffer();
-                            TscDll.sendcommand("CODEPAGE UTF-8\n");
-                            TscDll.sendcommand("SET TEAR ON\n");
-                            TscDll.sendcommand("DIRECTION 0\n");
-                            TscDll.sendcommand("TEXT 70,20,\"arial_na.TTF\",0,11,11,\"" + prod.getDescArticulo_1() + "\"\n");
-                            TscDll.sendcommand("TEXT 70,55,\"arial_na.TTF\",0,08,08,\"" + prod.getDescArticulo_2() + "\"\n");
-
-                            TscDll.sendcommand("TEXT 80,90,\"arial_na.TTF\",0,08,08,\"" + "Precio Anterior" + "\"\n");
-                            TscDll.sendcommand("TEXT 70,120,\"strike_t.TTF\",0,13,13,\"" + "$ " + prod.getPrecio_lista() + "\"\n");
-                            TscDll.sendcommand("TEXT 280,80,\"arial_na.TTF\",0,08,08,\"" + "Precio" + "\"\n");
-                            TscDll.sendcommand("TEXT 280,115,\"arial_bl.TTF\",0,20,20,\"" + "$ " + prod.getPrecio() + "\"\n");
-
-                            TscDll.sendcommand("TEXT 400,190,\"arial_na.TTF\",0,11,11,\"" + prod.getCodProd() + "\"\n");
-                            TscDll.barcode(70, 180, "128", 30, 1, 0, 1, 1, prod.getCodBarras());
-                            estado = TscDll.printerstatus();
-                            TscDll.printlabel(1, 1);
-
-                            prod.setIP("SI");
-                            db.updatecodigoproduto(prod);
-
-
-                            try {
-                                Thread.sleep(500);
-                            } catch (InterruptedException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                            }
-
-                        }
-
-                    }else{
-                        //todo SI ELEGI NO OFERTA
-
-                        if (prod.getOff_available().equals("N")) {
-                            Asignar("Imprimiendo: ", prod.getDescArticulo_1());
-                            TscDll.clearbuffer();
-                            TscDll.sendcommand("CODEPAGE UTF-8\n");
-                            TscDll.sendcommand("SET TEAR ON\n");
-                            TscDll.sendcommand("DIRECTION 0\n");
-                            TscDll.sendcommand("TEXT 70,20,\"arial_na.TTF\",0,11,11,\"" + prod.getDescArticulo_1() + "\"\n");
-                            TscDll.sendcommand("TEXT 70,55,\"arial_na.TTF\",0,08,08,\"" + prod.getDescArticulo_2() + "\"\n");
-                            TscDll.sendcommand("TEXT 280,80,\"arial_na.TTF\",0,08,08,\"" + "Precio" + "\"\n");
-                            TscDll.sendcommand("TEXT 280,115,\"arial_bl.TTF\",0,20,20,\"" + "$ " + prod.getPrecio_lista() + "\"\n");
-                            TscDll.sendcommand("TEXT 400,190,\"arial_na.TTF\",0,11,11,\"" + prod.getCodProd() + "\"\n");
-                            TscDll.barcode(70, 180, "128", 30, 1, 0, 1, 1, prod.getCodBarras());
-                            estado = TscDll.printerstatus();
-                            TscDll.printlabel(1, 1);
-                            prod.setIP("SI");
-                            db.updatecodigoproduto(prod);
-
-                            try {
-                                Thread.sleep(500);
-                            } catch (InterruptedException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                            }
-
-                        }
-                    }
-                }
-
-                int timepo = 50;
-                while (!estado.equals("00") && !estado.equals("20")) {
-
-                    Asignar("Tapa Abierta", prod.getDescArticulo_1() + "\n\n" +
-                            "Cambiar Rollo antes de: " + timepo);
-                    estado = TscDll.printerstatus();
-                    timepo--;
-                    if (cancelarrun || timepo == 0) {
-                        cancelarrun = true;
-                        break;
-                    }
-                }
-            }
-        }
-
-        TscDll.closeport(500);
-        cargarLista2();
-        EnableDialog(false, "",false);
-        DisplayPrintingStatusMessage("Finalizado.");
-        cancelarrun = false;
-        tagimprimirall = false;
-    }
 
 }

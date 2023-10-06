@@ -94,19 +94,6 @@ public class MenuPrincipal extends AppCompatActivity implements PorcentajeDescue
                     PorcentajeDescuento dialogFragment = new PorcentajeDescuento();
                     dialogFragment.show(getFragmentManager(), "discount_dialog");
 
-                        /*
-                        Intent intent2 = new Intent(MenuPrincipal.this, TagGondola.class);
-                        intent2.putExtra("mac", m_printerMAC);
-                        intent2.putExtra("suc", m_sucursal);
-                        intent2.putExtra("ip", m_ip);
-                        intent2.putExtra("tipoconexion", "TCP/IP");
-                        intent2.putExtra("ipimpre", m_printerIP);
-                        intent2.putExtra("portimpre", m_printerPort);
-                        intent2.putExtra("PrinterComandMethod",m_printerComandMethod);
-                        Log.e("portimpre","" +m_printerPort );
-                        startActivity(intent2);
-                        */
-
                 } else {
                     Toast.makeText(MenuPrincipal.this, "Debe configurar las opciones de la aplicacion", Toast.LENGTH_SHORT).show();
                 }
@@ -389,7 +376,7 @@ public class MenuPrincipal extends AppCompatActivity implements PorcentajeDescue
 
         // Puedes pasarlo a ActivityTaggondola o realizar otras acciones
 
-        Intent intent = new Intent(this, TagGondola.class);
+        Intent intent = new Intent(this, TagGondolaItau.class);
 
         intent.putExtra("descuento", discount);
         intent.putExtra("mac", m_printerMAC);
