@@ -118,6 +118,7 @@ public class ProductosDB {
             public void onCreate(SQLiteDatabase db) {
 
                 db.execSQL(ConstantsDB.TABLA_PRODUCTO_SQL);
+                db.execSQL(ConstantsDB.TABLA_PRODUCTO_ITAU_SQL);
                 db.execSQL(ConstantsDB.TABLA_LIST_PRODUCTO_SQL);
             }
 

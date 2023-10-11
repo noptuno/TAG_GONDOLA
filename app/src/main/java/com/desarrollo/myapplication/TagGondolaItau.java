@@ -24,7 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.desarrollo.myapplication.Adapter.ProductoAdapter;
-import com.desarrollo.myapplication.BaseDatos.ProductosDB;
+import com.desarrollo.myapplication.Adapter.ProductoAdapterItau;
 import com.desarrollo.myapplication.BaseDatos.ProductosDBItau;
 import com.desarrollo.myapplication.Clases.Producto;
 import com.desarrollo.myapplication.ParsearXML.ParserXml;
@@ -334,31 +334,21 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
 
                     RequestBody body = RequestBody.create(mediaType,
                             "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
-                                    "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" " +
-                                    "xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\r\n " +
-                                    " <soap:Body>\r\n  " +
-                                    "  <ObtenerDatosArticuloEtiquetasPl xmlns=\"http://tempuri.org/\">\r\n " +
-                                    "     <p_suc>" + sucursal + "</p_suc>\r\n    " +
-                                    "  <p_producto>" + codigocaptrado + "</p_producto>\r\n " +
-                                    "   </ObtenerDatosArticuloEtiquetasPl>\r\n " +
-                                    " </soap:Body>\r\n" +
-                                    "</soap:Envelope>\r\n\r\n");
-
-
+                                    "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns=\"http://tempuri.org/\">\r\n " +
+                                    "  <soapenv:Header/>\r\n " +
+                                    "  <soapenv:Body>\r\n   " +
+                                    "   <ObtenerDatosArticuloEtiquetasPl>\r\n     " +
+                                    "    <p_suc>"+ sucursal +"</p_suc>\r\n     " +
+                                    "    <p_producto>"+ codigocaptrado +"</p_producto>\r\n   " +
+                                    "   </ObtenerDatosArticuloEtiquetasPl>\r\n  " +
+                                    " </soapenv:Body>\r\n" +
+                                    "</soapenv:Envelope>");
 
                     RequestPicking = new Request.Builder()
                             .url("http://" + m_ip + "/WSSREtiquetas/EtiquetaService.asmx")
                             .post(body)
                             .addHeader("Content-Type", "text/xml")
-                            .addHeader("User-Agent", "PostmanRuntime/7.18.0")
-                            .addHeader("Accept", "*/*")
-                            .addHeader("Cache-Control", "no-cache")
-                            .addHeader("Postman-Token", "a76f7625-a2c8-4806-853a-877dff25011f,faebb6f7-d421-44eb-8a54-eb1786e95136")
                             .addHeader("Host", m_ip)
-                            .addHeader("Accept-Encoding", "gzip, deflate")
-                            .addHeader("Content-Length", "428")
-                            .addHeader("Connection", "keep-alive")
-                            .addHeader("cache-control", "no-cache")
                             .addHeader("SOAPAction", "http://tempuri.org/ObtenerDatosArticuloEtiquetasPl")
                             .build();
 
@@ -573,7 +563,7 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
 
-        ParserXml par = new ParserXml(TagGondolaItau.this);
+        ParserXmlItau par = new ParserXmlItau(TagGondolaItau.this);
         List<Producto> entries = null;
 
         try {
@@ -583,15 +573,14 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document docc = dBuilder.parse(asset);
 
-
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             Source xmlSource = new DOMSource(docc);
             Result outputTarget = new StreamResult(outputStream);
             TransformerFactory.newInstance().newTransformer().transform(xmlSource, outputTarget);
             InputStream is = new ByteArrayInputStream(outputStream.toByteArray());
-            par.parsear(is);
-            cargarLista();
+            par.parsear(is,50);
 
+            cargarLista();
 
         } catch (XmlPullParserException e) {
             e.printStackTrace();

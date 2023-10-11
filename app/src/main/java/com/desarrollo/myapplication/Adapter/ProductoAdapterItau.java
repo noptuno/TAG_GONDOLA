@@ -1,7 +1,6 @@
 package com.desarrollo.myapplication.Adapter;
 
 import android.content.Context;
-import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,7 +17,7 @@ import com.desarrollo.myapplication.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.NoteViewHolder> {
+public class ProductoAdapterItau extends RecyclerView.Adapter<ProductoAdapterItau.NoteViewHolder> {
 
     private List<Producto> notes;
     private OnNoteSelectedListener onNoteSelectedListener;
@@ -29,11 +28,11 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.NoteVi
     private String tipoconexion;
     private int descuento = 0;
 
-    public ProductoAdapter() {
+    public ProductoAdapterItau() {
         this.notes = new ArrayList<>();
     }
 
-    public ProductoAdapter(List<Producto> notes) {
+    public ProductoAdapterItau(List<Producto> notes) {
         this.notes = notes;
     }
 

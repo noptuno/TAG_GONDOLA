@@ -119,9 +119,6 @@ public class ParserXml {
                             Producto prod = RegistrarProducto(parser);
                             if (!prod.getEstado().equals("false"))
                             {
-
-                                //aplicar descuento aca
-
                                 db.insertarProducto(prod);
                                 estado = true;
                             }else{

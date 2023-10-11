@@ -36,12 +36,17 @@
         <activity
             android:name=".ScannerElo"
             android:windowSoftInputMode="stateHidden" />
+
+
         <activity
             android:name=".Configuracion.Registro_Grupo_Rubros"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+
+
         <activity
-            android:name=".ListTagGondola"
-            android:label="Cambio de precio" />
+            android:name=".TagGondolaItau" />
+
+
         <activity
             android:name=".Flash"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"

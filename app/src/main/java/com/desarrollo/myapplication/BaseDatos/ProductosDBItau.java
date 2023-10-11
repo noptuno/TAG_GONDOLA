@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.desarrollo.myapplication.Clases.Producto;
 
@@ -14,28 +13,26 @@ import java.util.ArrayList;
 
 public class ProductosDBItau {
 
-        private SQLiteDatabase dbItau;
+        private SQLiteDatabase db;
         private ProductosDBItau.DBHelper dbHelper;
 
         public ProductosDBItau(Context context) {
             dbHelper = new ProductosDBItau.DBHelper(context);
         }
 
-
         private void openReadableDB() {
-            dbItau = dbHelper.getReadableDatabase();
+            db = dbHelper.getReadableDatabase();
         }
 
         private void openWriteableDB() {
-            dbItau = dbHelper.getWritableDatabase();
+            db = dbHelper.getWritableDatabase();
         }
 
         private void closeDB() {
-            if (dbItau != null) {
-                dbItau.close();
+            if (db != null) {
+                db.close();
             }
         }
-
 
         private ContentValues clienteMapperContentValues(Producto producto) {
             ContentValues cv = new ContentValues();
@@ -59,53 +56,30 @@ public class ProductosDBItau {
 
     public void eliminarProductos() {
         this.openWriteableDB();
-        dbItau.delete(ConstantsDB.TABLA_PRODUCTO, null, null);
+        db.delete(ConstantsDB.TABLA_PRODUCTO_ITAU, null, null);
         this.closeDB();
     }
-
 
     public void updatecodigoproduto(Producto producto) {
 
         this.openWriteableDB();
         String where = ConstantsDB.PRO_CODIGOPRODUCTO + "= ?";
-        dbItau.update(ConstantsDB.TABLA_PRODUCTO, clienteMapperContentValues(producto), where, new String[]{String.valueOf(producto.getCodigoProducto())});
-        dbItau.close();
+        db.update(ConstantsDB.TABLA_PRODUCTO_ITAU, clienteMapperContentValues(producto), where, new String[]{String.valueOf(producto.getCodigoProducto())});
+        db.close();
     }
 
-
-    public Boolean validar(Producto producto) {
-
-        boolean error= false;
-        this.openReadableDB();
-        String where = ConstantsDB.PRO_CODIGOPRODUCTO+ "= ?";
-        String whered = ConstantsDB.PRO_CODIGOPRODUCTO;
-        //String[] whereArgs = {email};
-        Cursor c = dbItau.query(ConstantsDB.TABLA_PRODUCTO, null, where, new String[]{producto.getCodProd()}, null, null, null, null);
-        try{
-            if( c.getCount()>0) {
-                c.close();
-                error = true;
-            }
-
-        }catch (Exception ex){
-            Log.e("valiando" + "", "error al leer");
-            error = true;
-        }
-
-        return error;
-    }
 
 
     public void eliminarProducto(int codigoProducto) {
         this.openWriteableDB();
         String where = ConstantsDB.PRO_CODIGOPRODUCTO + "= ?";
-        dbItau.delete(ConstantsDB.TABLA_PRODUCTO, where, new String[]{String.valueOf(codigoProducto)});
+        db.delete(ConstantsDB.TABLA_PRODUCTO_ITAU, where, new String[]{String.valueOf(codigoProducto)});
         this.closeDB();
     }
 
     public long insertarProducto(Producto producto) {
         this.openWriteableDB();
-        long rowID = dbItau.insert(ConstantsDB.TABLA_PRODUCTO, null, clienteMapperContentValues(producto));
+        long rowID = db.insert(ConstantsDB.TABLA_PRODUCTO_ITAU, null, clienteMapperContentValues(producto));
         this.closeDB();
         return rowID;
     }
@@ -120,6 +94,7 @@ public class ProductosDBItau {
             public void onCreate(SQLiteDatabase db) {
 
                 db.execSQL(ConstantsDB.TABLA_PRODUCTO_SQL);
+                db.execSQL(ConstantsDB.TABLA_PRODUCTO_ITAU_SQL);
                 db.execSQL(ConstantsDB.TABLA_LIST_PRODUCTO_SQL);
             }
 
@@ -153,7 +128,7 @@ public class ProductosDBItau {
                         ConstantsDB.PRO_PRECIOLISTA
                 };
 
-        Cursor c = dbItau.query(ConstantsDB.TABLA_PRODUCTO, campos, null, null, null, null, where +" DESC");
+        Cursor c = db.query(ConstantsDB.TABLA_PRODUCTO_ITAU, campos, null, null, null, null, where +" DESC");
 
         try {
             while (c.moveToNext()) {
@@ -174,8 +149,8 @@ public class ProductosDBItau {
                 producto.setTxt_oferta(c.getString(13));
                 producto.setPrecio_lista(c.getString(14));
                 list.add(producto);
-
             }
+
         } finally {
             c.close();
         }

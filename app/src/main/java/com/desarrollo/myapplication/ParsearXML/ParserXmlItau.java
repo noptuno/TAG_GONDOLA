@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 import android.util.Xml;
 
-import com.desarrollo.myapplication.BaseDatos.ProductosDB;
 import com.desarrollo.myapplication.BaseDatos.ProductosDBItau;
 import com.desarrollo.myapplication.Clases.Producto;
 
@@ -22,7 +21,7 @@ public class ParserXmlItau {
     // Namespace general. null si no existe
     private static final String ns = null;
 
-    private ProductosDBItau db;
+    private ProductosDBItau dbitau;
 
     // Constantes del archivo Xml
 
@@ -111,7 +110,7 @@ public class ParserXmlItau {
                     if (nombreEtiqueta.equals(ETIQUETA_4)) {
 
                         try {
-                            db = new ProductosDBItau(context);
+                            dbitau = new ProductosDBItau(context);
 
                             Producto prod = RegistrarProducto(parser);
                             if (!prod.getEstado().equals("false"))
@@ -132,7 +131,7 @@ public class ParserXmlItau {
                                 prod.setPrecio(""+precioConDescuento);
 
 
-                                db.insertarProducto(prod);
+                                dbitau.insertarProducto(prod);
                                 estado = true;
                             }else{
                                 estado = false;

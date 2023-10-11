@@ -62,12 +62,9 @@ public class MenuPrincipal extends AppCompatActivity implements PorcentajeDescue
     private String password;
     private SharedPreferences sharedPref;
     private int m_printerPort = 515;
-
     private String m_printerComandMethod;
     private static final int REQUEST_PICK_CONFIGURACION = 2;
-
     DMRPrintSettings g_appSettings = new DMRPrintSettings("", 0, "0", 0, 0, "","",0,0,"","","","");
-
     private static BarcodeReader barcodeReader;
     private AidcManager manager;
     TSCActivity TscDll = new TSCActivity();

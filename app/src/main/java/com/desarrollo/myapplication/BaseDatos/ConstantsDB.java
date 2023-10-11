@@ -2,8 +2,8 @@ package com.desarrollo.myapplication.BaseDatos;
 
 public class ConstantsDB {
     //General
-    public static final String DB_NAME = "sanroque16.db";
-    public static final int DB_VERSION = 16;
+    public static final String DB_NAME = "sanroque17.db";
+    public static final int DB_VERSION = 17;
 
     //TABLA PRODUCTOS
 
@@ -26,7 +26,7 @@ public class ConstantsDB {
 
 
 
-
+    public static final String TABLA_PRODUCTO_ITAU = "ProductoItau";
 
 
     public static final String  TABLA_LIST_PRODUCTO = "ListProducto";
@@ -78,6 +78,24 @@ public class ConstantsDB {
                     PRO_TXTOFERTA + " TEXT," +
                     PRO_PRECIOLISTA   + " TEXT);" ;
 
+
+    public static final String TABLA_PRODUCTO_ITAU_SQL =
+            "CREATE TABLE  " + TABLA_PRODUCTO_ITAU + "(" +
+                    PRO_CODIGOPRODUCTO + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    PRO_DESCRIPCION1   + " TEXT," +
+                    PRO_DESCRIPCION2 + " TEXT," +
+                    PRO_CODPROD + " TEXT," +
+                    PRO_CODBARRAS + " TEXT," +
+                    PRO_PRECIO + " TEXT," +
+                    PRO_STOCK + " TEXT," +
+                    PRO_IP + " TEXT," +
+                    PRO_PRODUCTO + " TEXT," +
+                    PRO_SUC + " TEXT," +
+                    PRO_MENSAJE + " TEXT," +
+                    PRO_ESTADO + " TEXT," +
+                    PRO_OFFAVAILABLE + " TEXT," +
+                    PRO_TXTOFERTA + " TEXT," +
+                    PRO_PRECIOLISTA   + " TEXT);" ;
 
     public static final String TABLA_LIST_PRODUCTO_SQL =
             "CREATE TABLE  " + TABLA_LIST_PRODUCTO + "(" +
