@@ -2,8 +2,8 @@ package com.desarrollo.myapplication.BaseDatos;
 
 public class ConstantsDB {
     //General
-    public static final String DB_NAME = "sanroque17.db";
-    public static final int DB_VERSION = 17;
+    public static final String DB_NAME = "sanroque18.db";
+    public static final int DB_VERSION = 18;
 
     //TABLA PRODUCTOS
 
@@ -27,8 +27,6 @@ public class ConstantsDB {
 
 
     public static final String TABLA_PRODUCTO_ITAU = "ProductoItau";
-
-
     public static final String  TABLA_LIST_PRODUCTO = "ListProducto";
     public static final String  LIST_CODIGOPRODUCTO = "_codigoproducto";
     public static final String  LIST_DESCRIPCION1 = "DescArticulo_1";

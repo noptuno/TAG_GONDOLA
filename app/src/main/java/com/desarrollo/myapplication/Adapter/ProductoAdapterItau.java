@@ -137,7 +137,7 @@ public class ProductoAdapterItau extends RecyclerView.Adapter<ProductoAdapterIta
             Suc = (TextView) item.findViewById(R.id.txt_Suc);
             Mensaje = (TextView) item.findViewById(R.id.txt_Mensaje);
             Estado = (TextView) item.findViewById(R.id.txt_Estado);
-           //Oferta = (TextView) item.findViewById(R.id.txt_precio_lista);
+            //Oferta = (TextView) item.findViewById(R.id.txt_precio_lista);
             PrecioLista = (TextView) item.findViewById(R.id.txt_precio_lista);
             layoutetiquet = item.findViewById(R.id.layoutetiqueta);
             Checkimpreso = item.findViewById(R.id.img_view);
@@ -169,15 +169,17 @@ try{
 
     if (producto.getOff_available().toString().equals("N")) {
 
+        Oferta.setText(producto.getTxt_oferta());
+
         if (producto.getIP().toString().equals("NO")){
             Checkimpreso.setImageResource(R.drawable.ic_printer);
             layoutetiquet.setBackground(ContextCompat.getDrawable(contex, R.drawable.ic_tag_60x30));
-            PrecioLista.setVisibility(View.INVISIBLE);
+            PrecioLista.setVisibility(View.VISIBLE);
 
         }else{
             Checkimpreso.setImageResource(R.drawable.ic_replay_black_24dp);
             layoutetiquet.setBackground(ContextCompat.getDrawable(contex, R.drawable.ic_tag_60x30_impreso));
-            PrecioLista.setVisibility(View.INVISIBLE);
+            PrecioLista.setVisibility(View.VISIBLE);
         }
     } else {
 

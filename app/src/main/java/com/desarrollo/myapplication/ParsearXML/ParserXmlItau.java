@@ -110,39 +110,51 @@ public class ParserXmlItau {
                     if (nombreEtiqueta.equals(ETIQUETA_4)) {
 
                         try {
+
                             dbitau = new ProductosDBItau(context);
 
                             Producto prod = RegistrarProducto(parser);
                             if (!prod.getEstado().equals("false"))
                             {
+
                                 if(prod.getOff_available().equals("N")){
 
+                                    float precio = Float.parseFloat(prod.getPrecio_lista());
+                                    float descuentox = (precio * descuento) / 100.0f;
+                                    float precioConDescuento = precio - descuentox;
+                                    prod.setPrecio(""+precioConDescuento);
+                                    prod.setPrecio_lista(""+precio);
+
+                                }else{
+
+                                    float precio = Float.parseFloat(prod.getPrecio());
+                                    float descuentox = (precio * descuento) / 100.0f;
+                                    float precioConDescuento = precio - descuentox;
+                                    prod.setPrecio(""+precioConDescuento);
+                                    prod.setPrecio_lista(""+precio);
+
                                 }
-
-                                if (prod.getTxt_oferta().equals("")){
-
-
-                                }
-
-                                float precio = Float.parseFloat(prod.getPrecio());
-                                float descuentox = (precio * descuento) / 100.0f;
-                                float precioConDescuento = precio - descuentox;
-
-                                prod.setPrecio(""+precioConDescuento);
-
 
                                 dbitau.insertarProducto(prod);
                                 estado = true;
+
                             }else{
+
                                 estado = false;
+
                             }
 
                         } catch (Exception e) {
+
                             Log.e("errorXMLA", "mensaje");
+                            estado = false;
+
                         }
 
                     } else {
+
                         saltarEtiqueta(parser);
+
                     }
                 }
             }

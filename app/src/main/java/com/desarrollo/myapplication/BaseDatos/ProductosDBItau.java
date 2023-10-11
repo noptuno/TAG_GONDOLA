@@ -96,6 +96,9 @@ public class ProductosDBItau {
                 db.execSQL(ConstantsDB.TABLA_PRODUCTO_SQL);
                 db.execSQL(ConstantsDB.TABLA_PRODUCTO_ITAU_SQL);
                 db.execSQL(ConstantsDB.TABLA_LIST_PRODUCTO_SQL);
+                db.execSQL(ConstantsDB.TABLA_LOGIN_SQL);
+                db.execSQL(ConstantsDB.TABLA_RUBRO_SQL);
+
             }
 
             @Override

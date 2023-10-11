@@ -27,7 +27,6 @@ import com.desarrollo.myapplication.Adapter.ProductoAdapter;
 import com.desarrollo.myapplication.Adapter.ProductoAdapterItau;
 import com.desarrollo.myapplication.BaseDatos.ProductosDBItau;
 import com.desarrollo.myapplication.Clases.Producto;
-import com.desarrollo.myapplication.ParsearXML.ParserXml;
 import com.desarrollo.myapplication.ParsearXML.ParserXmlItau;
 import com.example.tscdll.TSCActivity;
 import com.honeywell.aidc.BarcodeFailureEvent;
@@ -91,7 +90,7 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
     private int m_printerPort =0;
 
     ConnectionBase conn = null;
-    private ProductoAdapter adapter;
+    private ProductoAdapterItau adapter;
     private ProductosDBItau db;
 
     private Button boton, buttonxml;
@@ -177,8 +176,8 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
             }
         });
 
-        adapter = new ProductoAdapter();
-        adapter.setOnNoteSelectedListener(new ProductoAdapter.OnNoteSelectedListener() {
+        adapter = new ProductoAdapterItau();
+        adapter.setOnNoteSelectedListener(new ProductoAdapterItau.OnNoteSelectedListener() {
             @Override
             public void onClick(final Producto producto) {
 
@@ -286,7 +285,9 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
 
         String codigoimprimir = codigomanual.getText().toString().trim();
         if (!codigoimprimir.equals("")) {
-            imprimirCodigo(codigoimprimir);
+
+
+            imprimirCodigo2(codigoimprimir);
             codigomanual.setText("");
             ocultarteclado();
         }
@@ -319,7 +320,7 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
 
     }
 
-    public void imprimirCodigo(final String codigoverificar) {
+    public void imprimirCodigo2(final String codigoverificar) {
 
         runOnUiThread(new Runnable() {
             @Override
@@ -414,7 +415,7 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
 
     @Override
     public void onBarcodeEvent(BarcodeReadEvent event) {
-        imprimirCodigo(event.getBarcodeData());
+        imprimirCodigo2(event.getBarcodeData());
 
     }
 

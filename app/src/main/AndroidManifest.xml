@@ -19,7 +19,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/m_logo_sanroque"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme5">
+        android:theme="@style/AppTheme5"
+        android:usesCleartextTraffic="true">
+
         <activity
             android:name=".ListOfertaWifi"
             android:exported="false" />
