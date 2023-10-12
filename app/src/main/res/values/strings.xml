@@ -50,7 +50,6 @@
     <string-array name="type_impre">
         <item>TSC</item>
         <item>HONEYWELL</item>
-        <item>DPL</item>
     </string-array>
 
     <string-array name="printer_mode_array">

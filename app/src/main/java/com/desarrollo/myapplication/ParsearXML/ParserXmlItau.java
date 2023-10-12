@@ -12,6 +12,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 
 /**
  * Parser XML de hoteles
@@ -122,16 +123,30 @@ public class ParserXmlItau {
                                     float precio = Float.parseFloat(prod.getPrecio_lista());
                                     float descuentox = (precio * descuento) / 100.0f;
                                     float precioConDescuento = precio - descuentox;
-                                    prod.setPrecio(""+precioConDescuento);
-                                    prod.setPrecio_lista(""+precio);
+
+                                    DecimalFormat decimalFormat = new DecimalFormat("#.##");
+                                    String precioConDescuentoStr = decimalFormat.format(precioConDescuento);
+
+                                    String precioStr = decimalFormat.format(precio);
+
+                                    prod.setPrecio(precioConDescuentoStr);
+                                    prod.setPrecio_lista(String.valueOf(precioStr));
+
 
                                 }else{
+
 
                                     float precio = Float.parseFloat(prod.getPrecio());
                                     float descuentox = (precio * descuento) / 100.0f;
                                     float precioConDescuento = precio - descuentox;
-                                    prod.setPrecio(""+precioConDescuento);
-                                    prod.setPrecio_lista(""+precio);
+
+                                    DecimalFormat decimalFormat = new DecimalFormat("#.##");
+                                    String precioConDescuentoStr = decimalFormat.format(precioConDescuento);
+
+                                    String precioStr = decimalFormat.format(precio);
+
+                                    prod.setPrecio(""+precioConDescuentoStr);
+                                    prod.setPrecio_lista(String.valueOf(precioStr));
 
                                 }
 

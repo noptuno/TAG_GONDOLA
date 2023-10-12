@@ -46,7 +46,11 @@
 
 
         <activity
-            android:name=".TagGondolaItau" />
+            android:name=".TagGondolaItau"
+            android:configChanges="screenSize|orientation"
+            android:label="ITAU"
+            android:theme="@style/AppTheme5"
+            android:windowSoftInputMode="stateHidden" />
 
 
         <activity

@@ -35,6 +35,7 @@ import com.desarrollo.myapplication.BaseDatos.RubroDB;
 import com.desarrollo.myapplication.Clases.GruposRubros;
 import com.desarrollo.myapplication.Constantes.Constante;
 import com.desarrollo.myapplication.R;
+import com.desarrollo.myapplication.TagGondolaItau;
 import com.example.tscdll.TSCActivity;
 
 import java.io.ByteArrayInputStream;
@@ -171,6 +172,7 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
 
     HashMap<String, UsbDevice> mDeviceList;
     Iterator<UsbDevice> mDeviceIterator;
+    private Button m_printButtonWifi;
 
 
     @Override
@@ -226,6 +228,7 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
 
         m_configConnectionButton = (Button) findViewById(R.id.configConn_button);
         m_printButton = (Button) findViewById(R.id.print_button);
+        m_printButtonWifi = (Button) findViewById(R.id.btn_print_wifi);
         m_saveButton = (Button) findViewById(R.id.saveSettings_button);
 
         m_connectionSpinner.setSelection(g_appSettings.getCommunicationMethod());
@@ -400,6 +403,16 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
                 new Thread(DOPrintMainActivity.this, "PrintingTask").start();
             }
         });
+        m_printButtonWifi.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                new Thread(DOPrintMainActivity.this, "PrintingTask").start();
+            }
+        });
+
+
+
 
         m_saveButton.setOnClickListener(new View.OnClickListener() {
 
@@ -741,9 +754,7 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
         try {
 
 
-
             EnableDialog(true, "Enviando Documento...");
-
 
 
             File f = new File(Environment.getExternalStorageDirectory().getPath() + "/Download/" + "/arial_bl.TTF");

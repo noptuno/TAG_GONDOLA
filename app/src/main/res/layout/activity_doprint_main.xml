@@ -277,8 +277,18 @@
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_fondo_color"
-                android:text="Print Test"
+                android:text="Cargar fuentes BT"
                 android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/btntestwifi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/btn_fondo_color"
+                android:text="TEST WIFI"
+                android:textColor="@color/white"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/saveSettings_button"
@@ -286,7 +296,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/btn_fondo_color2"
-                android:text="Guardar Configuración"
+                android:text="Guardar Conf"
                 android:textColor="@color/white" />
 
         </LinearLayout>

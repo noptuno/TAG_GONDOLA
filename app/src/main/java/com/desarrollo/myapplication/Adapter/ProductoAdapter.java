@@ -119,6 +119,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.NoteVi
         private TextView Oferta;
 
         private TextView PrecioLista;
+        private TextView txtPrecioanterior;
         private ImageView Checkimpreso;
 
         private LinearLayout layoutetiquet;
@@ -126,7 +127,6 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.NoteVi
         public NoteViewHolder(View item) {
             super(item);
 
-            codigoProducto = (TextView) item.findViewById(R.id.txt_codigoProducto);
             DescArticulo_1 = (TextView) item.findViewById(R.id.txt_DescArticulo_1);
             DescArticulo_2 = (TextView) item.findViewById(R.id.txt_DescArticulo_2);
             CodProd = (TextView) item.findViewById(R.id.txt_CodProd);
@@ -142,6 +142,8 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.NoteVi
             PrecioLista = (TextView) item.findViewById(R.id.txt_precio_lista);
             layoutetiquet = item.findViewById(R.id.layoutetiqueta);
             Checkimpreso = item.findViewById(R.id.img_view);
+            txtPrecioanterior= (TextView) item.findViewById(R.id.textViewprecioanterior);
+
 
         }
 
@@ -149,23 +151,19 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.NoteVi
 
 try{
 
-    codigoProducto.setText(producto.getCodigoProducto().toString());
+
     DescArticulo_1.setText(producto.getDescArticulo_1().toString());
     DescArticulo_2.setText(producto.getDescArticulo_2().toString());
     CodProd.setText(producto.getCodProd().toString());
     CodBarras.setText(producto.getCodBarras().toString());
-
     Stock.setText(producto.getStock().toString());
     IP.setText(producto.getIP().toString());
     Producto.setText(producto.getProducto().toString());
     Suc.setText(producto.getSuc().toString());
     Mensaje.setText(producto.getMensaje().toString());
     Estado.setText(producto.getEstado().toString());
-
-
     Precio.setText("$ "+producto.getPrecio().toString());
     PrecioLista.setText("$ "+producto.getPrecio_lista().toString());
-
 
 
     if (producto.getOff_available().toString().equals("N")) {
@@ -174,27 +172,30 @@ try{
             Checkimpreso.setImageResource(R.drawable.ic_printer);
             layoutetiquet.setBackground(ContextCompat.getDrawable(contex, R.drawable.ic_tag_60x30));
             PrecioLista.setVisibility(View.INVISIBLE);
+            txtPrecioanterior.setVisibility(View.INVISIBLE);
 
         }else{
             Checkimpreso.setImageResource(R.drawable.ic_replay_black_24dp);
             layoutetiquet.setBackground(ContextCompat.getDrawable(contex, R.drawable.ic_tag_60x30_impreso));
             PrecioLista.setVisibility(View.INVISIBLE);
+            txtPrecioanterior.setVisibility(View.INVISIBLE);
         }
     } else {
-
-        Oferta.setText(producto.getTxt_oferta());
 
         if (producto.getIP().toString().equals("NO")){
             Checkimpreso.setImageResource(R.drawable.ic_printer);
             layoutetiquet.setBackground(ContextCompat.getDrawable(contex, R.drawable.ic_tag_60x30_amarillo));
             PrecioLista.setVisibility(View.VISIBLE);
+            txtPrecioanterior.setVisibility(View.VISIBLE);
 
         }else{
             Checkimpreso.setImageResource(R.drawable.ic_replay_black_24dp);
             layoutetiquet.setBackground(ContextCompat.getDrawable(contex, R.drawable.ic_tag_60x30_amarillo_impreso));
             PrecioLista.setVisibility(View.VISIBLE);
+            txtPrecioanterior.setVisibility(View.VISIBLE);
         }
     }
+
 
 }catch (Exception e){
     Log.e("Ex",e.toString());

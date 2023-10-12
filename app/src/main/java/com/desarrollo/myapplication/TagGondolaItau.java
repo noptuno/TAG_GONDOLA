@@ -112,7 +112,6 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tag_gondola);
 
-
         porcentaje= findViewById(R.id.txt_porcentaje);
 
         cargarbarcoder();
@@ -215,8 +214,8 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
 
     private void cargardatospreference() {
         Bundle parametros = getIntent().getExtras();
-        if (parametros != null) {
 
+        if (parametros != null) {
 
             sucursal = (parametros.getString("suc"));
             m_printerMAC = (parametros.getString("mac"));
@@ -229,15 +228,15 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
 
             Log.e("Datos"," " + m_communicationMethod + " " + m_printerIP + " "+ m_printerPort + " "+ m_printerComandMethod);
 
-            if (m_communicationMethod.equals("TCP/IP")){
                 descuento = getIntent().getIntExtra("descuento", 0);
                 porcentaje.setText(descuento + "%");
                 porcentaje.setVisibility(View.VISIBLE);
-            }
-
+                setTitle("Itau %" + porcentaje);
 
         } else {
+
             Toast.makeText(getApplicationContext(), "No hay datos a mostrar", Toast.LENGTH_LONG).show();
+
         }
     }
 
@@ -285,7 +284,6 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
 
         String codigoimprimir = codigomanual.getText().toString().trim();
         if (!codigoimprimir.equals("")) {
-
 
             imprimirCodigo2(codigoimprimir);
             codigomanual.setText("");
@@ -691,10 +689,7 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
 
                                     EnableDialog(true, "Enviando Documento...",true);
 
-                                    if (m_communicationMethod.equals("TCP/IP")){
-
-                                        prepararCodigo();
-                                    }
+                                    prepararCodigo();
 
                                     EnableDialog(false, "Enviando terminando...",false);
                                     DisplayPrintingStatusMessage("Impresión Exitosa.");
@@ -728,9 +723,6 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
 
             case R.id.Imprimir_todo:
 
-
-                if (m_communicationMethod.equals("TCP/IP")){
-
                     AlertDialog.Builder build = new AlertDialog.Builder(TagGondolaItau.this);
 
                     build.setMessage("¿Desea imprimir toda la lista? ").setPositiveButton("Imprimir Todo", new DialogInterface.OnClickListener() {
@@ -738,7 +730,6 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
                         public void onClick(DialogInterface dialog, int which) {
 
                             tagimprimirall = true;
-                            imprimirofertas = false;
                             new Thread(TagGondolaItau.this, "PrintingTask").start();
                         }
 
@@ -753,7 +744,6 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
                     AlertDialog alertDialog = build.create();
                     alertDialog.show();
 
-                }
 
 
                 break;
@@ -790,6 +780,7 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
     private void prepararCodigo() {
 
         String m_data = "";
+
         if (m_printerComandMethod.equals("TSC")){
 
             m_data = "SIZE 99.10 mm, 71.1 mm\n"+
@@ -808,34 +799,6 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
                     "TEXT 488,332,\"striketh.TTF\",180,10,8,\"$ 1200\"\n"+
                     "TEXT 488,141,\"arial_bl.TTF\",180,11,27,\"$ 980\"\n"+
                     "PRINT 1,1\n";
-
-            msgBuffer = m_data.getBytes();
-
-            ImprimirWifi();
-
-        }else if (m_printerComandMethod.equals("HONEYWELL")){
-
-            m_data ="^XA\n" +
-                    "^PW799\n" +
-                    "^LL650\n" +
-                    "^MMT\n" +
-                    "^XZ\n" +
-                    "^XA\n" +
-                    "^CI28\n" +
-                    "^FWI\n" +
-                    "^CF0,30\n"+
-                    "^LH0,0\n" +
-                    "^PON\n" +
-                    "^MD0\n" +
-                    "^PQ1,0,1,Y\n" +
-                    "^XZ\n" +
-                    "^XA\n" +
-                    "^LRN\n" +
-                    "^A0N,51,52^FO47,24^FDProducto 1^FS\n" +
-                    "^A0N,34,34^FO53,82^FDProducto 2^FS\n" +
-                    "^A0N,56,56^FO405,180^FD$ 20000^FS\n" +
-                    "^A0N,101,102^FO366,373^FD$ 10000^FS\n" +
-                    "^XZ";
 
             msgBuffer = m_data.getBytes();
 
@@ -882,6 +845,7 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
             ImprimirWifi();
 
         }
+
     }
 
     private void ImprimirWifi() {
@@ -968,8 +932,6 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
                             msgBuffer = prepararTSPL(lista_producto_seleccionada).getBytes();
                         }else if(m_printerComandMethod.equals("HONEYWELL")){
                             msgBuffer = prepararDP(lista_producto_seleccionada).getBytes();
-                        }else{
-                            msgBuffer = prepararDPL(lista_producto_seleccionada).getBytes();
                         }
 
                         senddatoswifiTCP(conn,msgBuffer);
@@ -990,17 +952,14 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
                             }
                             if (!prod.getIP().equals("SI")){
 
-                                    if (prod.getOff_available().equals("S")) {
-
                                         Asignar("Imprimiendo: ", prod.getDescArticulo_1());
 
                                         if (m_printerComandMethod.equals("TSC")){
                                             msgBuffer = prepararTSPL(prod).getBytes();
                                         }else if(m_printerComandMethod.equals("HONEYWELL")){
                                             msgBuffer = prepararDP(prod).getBytes();
-                                        }else{
-                                            msgBuffer = prepararDPL(prod).getBytes();
                                         }
+
                                         senddatoswifiTCP(conn,msgBuffer);
                                         Thread.sleep(100);
 
@@ -1014,7 +973,6 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
                                             e.printStackTrace();
                                         }
 
-                                    }
 
                             }
                         }
@@ -1108,36 +1066,6 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
                         "<xpml></page></xpml><xpml><end/></xpml>";
 
         return m_data;
-    }
-
-    private String prepararDPL(Producto producto) {
-
-        String m_data ="^XA\n" +
-                "^PW799\n" +
-                "^LL650\n" +
-                "^MMT\n" +
-                "^XZ\n" +
-                "^XA\n" +
-                "^CI28\n" +
-                "^FWI\n" +
-                "^CF0,30\n" +
-                "^LH0,0\n" +
-                "^PON\n" +
-                "^MD0\n" +
-                "^PQ1,0,1,Y\n" +
-                "^XZ\n" +
-                "^XA\n" +
-                "^LRN\n"+
-                "^A0N,51,52^FO47,24^FD"+producto.getDescArticulo_1()+"^FS\n" +
-                "^A0N,34,34^FO53,82^FD"+producto.getDescArticulo_2() +"^FS\n" ;
-            m_data = m_data +
-                    "^A0N,56,56^FO405,180^FD$ "+ producto.getPrecio_lista()+"^FS\n" +
-                    "^A0N,101,102^FO366,373^FD$ "+producto.getPrecio()+"^FS\n" +
-                    "^XZ";
-
-
-        return m_data;
-
     }
 
     private void senddatoswifiTCP(ConnectionBase conn, byte[] msgBuffer) {
