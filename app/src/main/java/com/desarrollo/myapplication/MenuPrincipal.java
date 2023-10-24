@@ -1,5 +1,7 @@
 package com.desarrollo.myapplication;
 
+
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -45,17 +47,13 @@ public class MenuPrincipal extends AppCompatActivity implements PorcentajeDescue
     private int condicion = 0;
     TextView text,txtversion;
     String idlogin;
-
     String m_communicationMethod = "";
-
     private Button btnTag, btnEti,btnScann,btnPicking;
     String ApplicationConfigFilename = "applicationconfigg.dat";
     private String m_printerMode = null;
     private String m_printerMAC = null;
     private String m_ip = null;
-
     private Button btnwifi;
-
     private  String m_printerIP = null;
     private String m_sucursal;
     private TextView txtsucursal;
@@ -69,7 +67,6 @@ public class MenuPrincipal extends AppCompatActivity implements PorcentajeDescue
     private AidcManager manager;
     TSCActivity TscDll = new TSCActivity();
     private int m_configurado;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,9 +99,7 @@ public class MenuPrincipal extends AppCompatActivity implements PorcentajeDescue
         btnEti.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (m_configurado != 0) {
-
                         Intent intent2 = new Intent(MenuPrincipal.this, ListTagGondola.class);
                         intent2.putExtra("mac", m_printerMAC);
                         intent2.putExtra("suc", m_sucursal);
@@ -114,20 +109,14 @@ public class MenuPrincipal extends AppCompatActivity implements PorcentajeDescue
                         intent2.putExtra("portimpre", m_printerPort);
                         intent2.putExtra("PrinterComandMethod",m_printerComandMethod);
                         Log.e("portimpre","" +m_printerPort );
-
                         startActivity(intent2);
-
                 } else {
-
                     Toast.makeText(MenuPrincipal.this, "Debe configurar las opciones de la aplicacion", Toast.LENGTH_SHORT).show();
-
                 }
-
             }
         });
 
         btnTag = findViewById(R.id.btnTag);
-
         btnTag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -367,7 +356,7 @@ public class MenuPrincipal extends AppCompatActivity implements PorcentajeDescue
         return super.onOptionsItemSelected(item);
     }
 
-
+    private SharedPreferences pref;
     @Override
     public void onDiscountSelected(int discount) {
 

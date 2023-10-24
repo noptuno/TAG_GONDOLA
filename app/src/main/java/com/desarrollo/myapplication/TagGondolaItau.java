@@ -1,9 +1,14 @@
 package com.desarrollo.myapplication;
 
+
+import static com.desarrollo.myapplication.Constantes.Constante.PREF_SANROQUE_CONF;
+import static com.desarrollo.myapplication.Constantes.Constante.PREF_ULTIMODESCUENTO;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,8 +53,11 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -105,8 +113,9 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
     private ProgressDialog dialog;
     private int descuento = 0;
     private TextView porcentaje;
-
+    private SharedPreferences pref;
     private boolean imprimirofertas;
+    private int descuentoanterior;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,6 +130,9 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
         botonesyadapter();
 
         cargarLista();
+
+
+
 
     }
 
@@ -231,13 +243,25 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
                 descuento = getIntent().getIntExtra("descuento", 0);
                 porcentaje.setText(descuento + "%");
                 porcentaje.setVisibility(View.VISIBLE);
-                setTitle("Itau %" + porcentaje);
+
+                pref = getSharedPreferences(PREF_SANROQUE_CONF, MODE_PRIVATE);
+                descuentoanterior = pref.getInt(PREF_ULTIMODESCUENTO,0);
+
+                if (descuentoanterior!=descuento){
+                    Limpiar();
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putInt(PREF_ULTIMODESCUENTO, descuento);
+                    editor.apply();
+                }
 
         } else {
-
             Toast.makeText(getApplicationContext(), "No hay datos a mostrar", Toast.LENGTH_LONG).show();
-
         }
+
+
+
+
+
     }
 
     private void cargarbarcoder() {
@@ -492,6 +516,29 @@ public class TagGondolaItau extends AppCompatActivity implements BarcodeReader.B
         });
     }
 
+    @Override
+    public void onBackPressed() {
+
+        AlertDialog.Builder build4 = new AlertDialog.Builder(TagGondolaItau.this);
+        build4.setMessage("¿Desea Salir?, Se borrará la lista si cambia de %").setPositiveButton("Salir", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                finish();
+
+            }
+
+        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        AlertDialog alertDialog4 = build4.create();
+        alertDialog4.show();
+
+
+    }
 
     private void restaurarimpresion() {
 

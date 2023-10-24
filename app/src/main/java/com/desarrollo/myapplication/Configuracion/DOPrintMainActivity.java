@@ -172,7 +172,6 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
 
     HashMap<String, UsbDevice> mDeviceList;
     Iterator<UsbDevice> mDeviceIterator;
-    private Button m_printButtonWifi;
 
 
     @Override
@@ -228,8 +227,7 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
 
         m_configConnectionButton = (Button) findViewById(R.id.configConn_button);
         m_printButton = (Button) findViewById(R.id.print_button);
-        m_printButtonWifi = (Button) findViewById(R.id.btn_print_wifi);
-        m_saveButton = (Button) findViewById(R.id.saveSettings_button);
+         m_saveButton = (Button) findViewById(R.id.saveSettings_button);
 
         m_connectionSpinner.setSelection(g_appSettings.getCommunicationMethod());
         m_PrinterModerSpinner.setSelection(g_appSettings.getPrinterComandMethodPosition());
@@ -403,15 +401,6 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
                 new Thread(DOPrintMainActivity.this, "PrintingTask").start();
             }
         });
-        m_printButtonWifi.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                new Thread(DOPrintMainActivity.this, "PrintingTask").start();
-            }
-        });
-
-
 
 
         m_saveButton.setOnClickListener(new View.OnClickListener() {
