@@ -102,10 +102,12 @@ public class ProductosDB {
     }
 
     public long insertarProducto(Producto producto) {
+
         this.openWriteableDB();
         long rowID = db.insert(ConstantsDB.TABLA_PRODUCTO, null, clienteMapperContentValues(producto));
         this.closeDB();
         return rowID;
+
     }
 
         private static class DBHelper extends SQLiteOpenHelper {
