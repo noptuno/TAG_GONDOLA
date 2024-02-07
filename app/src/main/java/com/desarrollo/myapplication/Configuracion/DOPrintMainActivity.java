@@ -756,6 +756,8 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
             fos.write(buffer);
             fos.close();
 
+            Log.e("carga","cargafuente A");
+
 
             File f2 = new File(Environment.getExternalStorageDirectory().getPath() + "/Download/" + "/arial_na.TTF");
             InputStream is2 =  mContext.getResources().openRawResource(R.raw.arial_narrow);
@@ -767,6 +769,7 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
             fos2.write(buffer2);
             fos2.close();
 
+            Log.e("carga","cargafuente B");
 
             File f3 = new File(Environment.getExternalStorageDirectory().getPath() + "/Download/" + "/strike_t.TTF");
             InputStream is3 =  mContext.getResources().openRawResource(R.raw.strikethrough);
@@ -778,6 +781,7 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
             fos3.write(buffer3);
             fos3.close();
 
+            Log.e("carga","cargafuente C");
 
             TscDll.openport(m_printerMAC);
             TscDll.setup(76, 35, 2, 1, 1, 4, 0);
@@ -795,12 +799,16 @@ public class DOPrintMainActivity extends AppCompatActivity implements Runnable {
             TscDll.sendcommand("TEXT 400,190,\"arial_na.TTF\",0,11,11,\"" + "123456" + "\"\n");
             TscDll.barcode(80, 180, "128", 30, 1, 0, 1, 1, "123456");
             TscDll.printlabel(1, 1);
-            TscDll.closeport(5000);
+            TscDll.closeport(15000);
+
+            Log.e("TEST","Test de impresion ");
+
             EnableDialog(false, "Enviando terminando...");
 
         } catch (Exception e) {
             e.printStackTrace();
             EnableDialog(false, "Enviando terminando...");
+            Log.e("ERROR TEST","ERROR Catch ");
             //Toast.makeText(Imprimiretiquetas.this, "Problema con la conexion Bluetooth.. Reintentar" ,Toast.LENGTH_SHORT).show();
         }
     }
